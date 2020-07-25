@@ -28,7 +28,7 @@
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
-          <b-button class="login-btn mt-5" block>LOGIN</b-button>
+          <b-button class="login-btn mt-5" @click="onLogin" block>LOGIN</b-button>
           <p class="text-muted mt-1" style="text-align: center;">atau</p>
           <b-button class="register-btn" block>Daftar</b-button>
         </b-form>
@@ -38,8 +38,33 @@
 </template>
 
 <script>
-export default {
+import firebase from '../config/firebase'
 
+const db = firebase.firestore()
+
+export default {
+  methods: {
+    async onLogin () {
+      const employeesData = []
+      await db.collection('employees')
+        .where('name', '==', 'Syahrizal')
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            employeesData.push({
+              id: doc.id,
+              name: doc.data().name,
+              date: doc.data().date
+            })
+            console.log(doc.id, '=>', doc.data())
+          })
+          return employeesData
+        })
+        .catch((error) => {
+          console.log('Error getting documents: ', error)
+        })
+    }
+  }
 }
 </script>
 
