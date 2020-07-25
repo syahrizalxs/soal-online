@@ -30,7 +30,7 @@
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
-          <b-button class="login-btn mt-5" @click="onLogin" block>LOGIN</b-button>
+          <b-button class="login-btn mt-5" @click="onLogin" block>Masuk</b-button>
           <p class="text-muted mt-1" style="text-align: center;">atau</p>
           <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Daftar</b-button>
         </b-form>
@@ -42,7 +42,6 @@
           >
             <b-form-input
               id="input-1"
-              type="username"
               autocomplete="new-password"
               required
               v-model="username"
@@ -55,7 +54,6 @@
           >
             <b-form-input
               id="input-1"
-              type="fullname"
               required
               v-model="fullname"
               placeholder="Enter Full Name"
@@ -77,7 +75,7 @@
               placeholder="Confirm password"
             ></b-form-input>
           </b-form-group>
-          <b-button class="login-btn mt-5" @click="onLogin" block>Daftar</b-button>
+          <b-button class="login-btn mt-5" @click="onRegister" block>Daftar</b-button>
           <p class="text-muted mt-1" style="text-align: center;">Sudah punya akun ?</p>
           <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Login</b-button>
         </b-form>
@@ -88,6 +86,7 @@
 
 <script>
 import firebase from '../config/firebase'
+import Swal from 'sweetalert2'
 
 const db = firebase.firestore()
 
@@ -101,31 +100,36 @@ export default {
       nis: '',
       phoneNumber: '',
       loginComponent: true,
-      options: [
-        { text: 'Murid', value: 'murid' },
-        { text: 'Guru', value: 'guru' },
-      ]
+      role: 'murid'
     }
   },
   methods: {
     async onLogin () {
-      const employeesData = []
-      await db.collection('employees')
-        .where('name', '==', 'Syahrizal')
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            employeesData.push({
-              id: doc.id,
-              name: doc.data().name,
-              date: doc.data().date
-            })
-            console.log(doc.id, '=>', doc.data())
-          })
-          return employeesData
+      db.collection('users').doc(username).set({
+        username: this.username,
+        password: this.password,
+        fullname: this.fullname,
+        role: this.role
+      })
+        .then(function () {
+          Swal.fire('Succesfully', 'Registrasi berhasil!', 'success')
         })
-        .catch((error) => {
-          console.log('Error getting documents: ', error)
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
+    },
+    async onRegister () {
+      db.collection('users').doc(this.username).set({
+        username: this.username,
+        password: this.password,
+        fullname: this.fullname,
+        role: this.role
+      })
+        .then(function () {
+          Swal.fire('Succesfully', 'Registrasi berhasil!', 'success')
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
         })
     }
   }
