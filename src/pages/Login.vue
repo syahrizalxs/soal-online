@@ -7,6 +7,7 @@
       <div class="container form-wrapper">
         <h5>Selamat Datang di E-Learning SD</h5>
         <b-form class="mt-4" v-if="loginComponent">
+          <h6 class="text-info">Silahkan Masuk untuk melanjutkan</h6>
           <b-form-group
             id="input-group-1"
             label="Email"
@@ -30,11 +31,12 @@
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
-          <b-button class="login-btn mt-5" @click="onLogin" block>Masuk</b-button>
-          <p class="text-muted mt-1" style="text-align: center;">atau</p>
+          <b-button class="login-btn mt-5" @click="$router.replace('/')" block>Masuk</b-button>
+          <p class="text-muted my-3c" style="text-align: center;">atau</p>
           <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Daftar</b-button>
         </b-form>
         <b-form class="mt-4" v-if="!loginComponent">
+          <h6 class="text-info">Lengkapi form dibawah ini untuk mendaftar</h6>
           <b-form-group
             id="input-group-1"
             label="Username"
@@ -74,9 +76,12 @@
               v-model="confirmPassword"
               placeholder="Confirm password"
             ></b-form-input>
+            <p class="text-danger mt-1" style="font-size: 12px;" v-if="confirmPassword && confirmPassword !== password">
+              Password did not match.
+            </p>
           </b-form-group>
-          <b-button class="login-btn mt-5" @click="onRegister" block>Daftar</b-button>
-          <p class="text-muted mt-1" style="text-align: center;">Sudah punya akun ?</p>
+          <b-button class="login-btn mt-5" @click="onRegister" :disabled="!username || !password || !confirmPassword || !fullname" block>Daftar</b-button>
+          <p class="text-muted my-3" style="text-align: center;">Sudah punya akun ?</p>
           <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Login</b-button>
         </b-form>
       </div>
@@ -105,7 +110,7 @@ export default {
   },
   methods: {
     async onLogin () {
-      db.collection('users').doc(username).set({
+      db.collection('users').doc(this.username).set({
         username: this.username,
         password: this.password,
         fullname: this.fullname,
@@ -119,6 +124,7 @@ export default {
         })
     },
     async onRegister () {
+      let self = this
       db.collection('users').doc(this.username).set({
         username: this.username,
         password: this.password,
@@ -127,6 +133,7 @@ export default {
       })
         .then(function () {
           Swal.fire('Succesfully', 'Registrasi berhasil!', 'success')
+          self.$router.replace('/')
         })
         .catch(function (error) {
           console.error('Error writing document: ', error)
