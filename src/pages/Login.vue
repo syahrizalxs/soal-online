@@ -6,7 +6,7 @@
     <div class="right-content">
       <div class="container form-wrapper">
         <h5>Selamat Datang di E-Learning SD</h5>
-        <b-form class="mt-4">
+        <b-form class="mt-4" v-if="loginComponent">
           <b-form-group
             id="input-group-1"
             label="Email"
@@ -16,6 +16,7 @@
               id="input-1"
               type="email"
               required
+              v-model="username"
               placeholder="Enter email"
             ></b-form-input>
           </b-form-group>
@@ -25,12 +26,60 @@
               id="input-2"
               type="password"
               required
+              v-model="password"
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
           <b-button class="login-btn mt-5" @click="onLogin" block>LOGIN</b-button>
           <p class="text-muted mt-1" style="text-align: center;">atau</p>
-          <b-button class="register-btn" block>Daftar</b-button>
+          <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Daftar</b-button>
+        </b-form>
+        <b-form class="mt-4" v-if="!loginComponent">
+          <b-form-group
+            id="input-group-1"
+            label="Username"
+            label-for="input-1"
+          >
+            <b-form-input
+              id="input-1"
+              type="username"
+              autocomplete="new-password"
+              required
+              v-model="username"
+              placeholder="Enter email"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group
+            label="Full Name"
+          >
+            <b-form-input
+              id="input-1"
+              type="fullname"
+              required
+              v-model="fullname"
+              placeholder="Enter Full Name"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="input-group-2" label="Password" label-for="input-2">
+            <b-form-input
+              type="password"
+              required
+              v-model="password"
+              placeholder="Enter password"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="input-group-2" label="Confirm Password" label-for="input-2">
+            <b-form-input
+              type="password"
+              required
+              v-model="confirmPassword"
+              placeholder="Confirm password"
+            ></b-form-input>
+          </b-form-group>
+          <b-button class="login-btn mt-5" @click="onLogin" block>Daftar</b-button>
+          <p class="text-muted mt-1" style="text-align: center;">Sudah punya akun ?</p>
+          <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Login</b-button>
         </b-form>
       </div>
     </div>
@@ -43,6 +92,21 @@ import firebase from '../config/firebase'
 const db = firebase.firestore()
 
 export default {
+  data () {
+    return {
+      username: '',
+      password: '',
+      confirmPassword: '',
+      fullname: '',
+      nis: '',
+      phoneNumber: '',
+      loginComponent: true,
+      options: [
+        { text: 'Murid', value: 'murid' },
+        { text: 'Guru', value: 'guru' },
+      ]
+    }
+  },
   methods: {
     async onLogin () {
       const employeesData = []
