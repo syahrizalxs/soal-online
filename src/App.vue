@@ -12,4 +12,7 @@ export default {
 @import './assets/styles/_base.scss';
 @import './assets/styles/_colors.scss';
 @import './assets/styles/header.scss';
+.pointer {
+  cursor: pointer;
+}
 </style>

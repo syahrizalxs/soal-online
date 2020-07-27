@@ -31,7 +31,7 @@
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
-          <b-button class="login-btn mt-5" @click="$router.replace('/')" block>Masuk</b-button>
+          <b-button class="login-btn mt-5" @click="onLogin" block>Masuk</b-button>
           <p class="text-muted my-3c" style="text-align: center;">atau</p>
           <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Daftar</b-button>
         </b-form>
@@ -110,21 +110,24 @@ export default {
   },
   methods: {
     async onLogin () {
-      db.collection('users').doc(this.username).set({
-        username: this.username,
-        password: this.password,
-        fullname: this.fullname,
-        role: this.role
+      const self = this
+      var docRef = db.collection('users').doc(this.username)
+      docRef.get().then(function (doc) {
+        if (doc.exists) {
+          if (doc.data().password === self.password) {
+            const userInfo = doc.data()
+            localStorage.setItem('userInfo', JSON.stringify(userInfo))
+            self.$router.replace('/')
+          }
+        } else {
+          Swal.fire('Error', 'User tidak ditemukan!', 'error')
+        }
+      }).catch(function (error) {
+        console.log('Error getting document:', error)
       })
-        .then(function () {
-          Swal.fire('Succesfully', 'Registrasi berhasil!', 'success')
-        })
-        .catch(function (error) {
-          console.error('Error writing document: ', error)
-        })
     },
     async onRegister () {
-      let self = this
+      const self = this
       db.collection('users').doc(this.username).set({
         username: this.username,
         password: this.password,
@@ -132,8 +135,8 @@ export default {
         role: this.role
       })
         .then(function () {
-          Swal.fire('Succesfully', 'Registrasi berhasil!', 'success')
-          self.$router.replace('/')
+          Swal.fire('Succesfully', 'Registrasi berhasil! Silahkan masuk untuk melanjutkan!', 'success')
+          self.loginComponent = !self.loginComponent
         })
         .catch(function (error) {
           console.error('Error writing document: ', error)
