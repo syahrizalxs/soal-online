@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="left-content">
-
+     <img src="../assets/login.jpg">
     </div>
     <div class="right-content">
       <div class="container form-wrapper">
@@ -31,6 +31,7 @@
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
+            <p class="text-danger text-center" v-if="incorrectPassword">Username / Password salah!</p>
           <b-button class="login-btn mt-5" @click="onLogin" block>Masuk</b-button>
           <p class="text-muted my-3c" style="text-align: center;">atau</p>
           <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Daftar</b-button>
@@ -105,7 +106,8 @@ export default {
       nis: '',
       phoneNumber: '',
       loginComponent: true,
-      role: 'murid'
+      role: 'murid',
+      incorrectPassword: false
     }
   },
   methods: {
@@ -118,9 +120,11 @@ export default {
             const userInfo = doc.data()
             localStorage.setItem('userInfo', JSON.stringify(userInfo))
             self.$router.replace('/')
+          } else {
+            self.incorrectPassword = true
           }
         } else {
-          Swal.fire('Error', 'User tidak ditemukan!', 'error')
+          incorrectPassword = true
         }
       }).catch(function (error) {
         console.log('Error getting document:', error)
@@ -156,9 +160,9 @@ export default {
   background-color: map-get($colors, dark);
   height: 100%;
   width: 70%;
-  background-image: url('../assets/login.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-image: url('../assets/login.jpg');
+  // background-repeat: no-repeat;
+  // background-size: cover;
 }
 .right-content {
   display: flex;
