@@ -1,7 +1,7 @@
 <template>
-  <div class="default-header shadow">
+  <div class="default-header">
     <b-navbar toggleable="md" type="dark" variant="dark" class="__custom-navbar">
-      <b-navbar-brand href="#">E-Learning</b-navbar-brand>
+      <!-- <b-navbar-brand></b-navbar-brand> -->
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 

@@ -27,11 +27,8 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-  background-color: map-get($colors, light);
+  background-color: #343a40 !important;
   height: 100% !important;
-  -webkit-box-shadow: 10px 10px 5px 0px rgba(240,240,240,1);
-  -moz-box-shadow: 10px 10px 5px 0px rgba(240,240,240,1);
-  box-shadow: 10px 10px 5px 0px rgba(240,240,240,1);
 }
 
 nav {
