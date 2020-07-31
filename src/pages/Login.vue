@@ -124,7 +124,7 @@ export default {
             self.incorrectPassword = true
           }
         } else {
-          incorrectPassword = true
+          self.incorrectPassword = true
         }
       }).catch(function (error) {
         console.log('Error getting document:', error)

@@ -15,4 +15,8 @@ export default {
 .pointer {
   cursor: pointer;
 }
+
+* {
+  letter-spacing: 1px;
+}
 </style>

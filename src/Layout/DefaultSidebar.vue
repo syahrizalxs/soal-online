@@ -2,13 +2,14 @@
   <div class="wrapper">
     <nav class="sidebar bg-dark text-light">
       <ul>
-        <li class="list-items pointer" v-b-toggle.collapse-1><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Mata Pelajaran</span></li>
+        <li class="list-items pointer"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Kelas Saya</span></li>
+        <li class="list-items pointer active" v-b-toggle.collapse-1><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Mata Pelajaran</span></li>
           <b-collapse v-for="(item, index) in array" :key="index" id="collapse-1">
             <b-list-group>
               <b-list-group-item class="pointer bg-dark ml-2">&#8226; {{item}}</b-list-group-item>
             </b-list-group>
           </b-collapse>
-          <li class="list-items pointer"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Profile</span></li>
+          <li class="list-items pointer" @click="$router.push('/profile/' + userInfo.username)"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Profile</span></li>
       </ul>
     </nav>
   </div>
@@ -19,8 +20,17 @@ export default {
   name: 'sidebar',
   data () {
     return {
-      array: ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Agama']
+      array: ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Agama'],
+      userInfo: ''
     }
+  },
+  methods: {
+    getUserInfo () {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    }
+  },
+  created () {
+    this.getUserInfo()
   }
 }
 </script>
@@ -42,8 +52,11 @@ nav {
 
 .list-items {
   display: flex;
-  border-bottom: .7px solid #cccccc;
-  border-top: .7px solid #cccccc;
+  // border-bottom: .7px solid #cccccc;
+  border-top: 0.2px solid #707070;
 }
-
+.active {
+  border-left: 4px solid map-get($colors, base );
+  color: map-get($colors, base)
+}
 </style>

@@ -1,22 +1,23 @@
 <template>
   <div class="default-container">
     <div id="sidebar">
-			<div class="sidebar-top">
+      <div class="sidebar-top">
         <b-navbar toggleable="md" type="dark" variant="dark" class="__custom-navbar">
           <b-navbar-brand>E-Learning</b-navbar-brand>
         </b-navbar>
       </div>
-			<div class="sidebar-bottom">
+      <div class="sidebar-bottom">
         <DefaultSidebar />
       </div>
-		</div>
-		<div id="rightSideWrapper">
-			<header> 
-				<DefaultHeader />
-			</header>
-			<div class="ContentBox">
-			</div>
-		</div>
+    </div>
+    <div id="rightSideWrapper">
+      <header style="z-index: 999;" class="shadow">
+        <DefaultHeader />
+      </header>
+      <div class="ContentBox" style="z-index: 1; overflow: hidden;">
+        <router-view />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,20 +33,20 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-*{ 
+*{
     margin: 0px;
 }
 
 #sidebar {
-	/*Strictly Necessary */
-	position:fixed; 
-	height: 100%;
-	width:20%;
-	margin: 0px;  
+  /*Strictly Necessary */
+  position:fixed;
+  height: 100%;
+  width:17%;
+  margin: 0px;
 
   /*Aesthetics*/
-  background: lightblue; 
-  border-radius: 7px;  
+  background: lightblue;
+  border-radius: 7px;
 }
 .sidebar-top {
   width: 100%;
@@ -58,55 +59,52 @@ export default {
   height: 100%;
 }
 
-
 #rightSideWrapper {
-	/*Strictly Necessary */
-	width:80%; 
-	float: right;
+  /*Strictly Necessary */
+  width:83%;
+  float: right;
 
-	/*Aesthetics*/
-	background: #fff;	
+  /*Aesthetics*/
+  background: #fff;
 }
 
 header {
-	/*Strictly Necessary */
-	position: fixed;
-	width: 80%;	
-	// height: 100px; /*Adjust the hight to your purposes*/
-	
-	/*Aesthetics*/
-	background: lightSalmon;
-	border-radius: 7px;
+  /*Strictly Necessary */
+  position: fixed;
+  width: 83%;
+  // height: 100px; /*Adjust the hight to your purposes*/
+
+  /*Aesthetics*/
+  background: lightSalmon;
+  border-radius: 7px;
 }
 
 .ContentBox{
-	margin-top: 60px; /*The height of the   header*/
-	display:flex;
-	flex-flow: row wrap;
-} 
+  margin-top: 60px; /*The height of the   header*/
+  display:flex;
+  flex-flow: row wrap;
+}
 
 main, section, footer {
-    /*Aesthetics*/
-	 background: lightgray; 
-	 border-radius: 7px; 
-	 margin: 5px; 
-	 padding: 20px;
+  /*Aesthetics*/
+  background: lightgray;
+  border-radius: 7px;
+  margin: 5px;
+  padding: 20px;
 }
 
 main {
-  /*Strictly Necessary */
+/*Strictly Necessary */
   height: 400px;
   order: 1;
-  flex: 0 1 100%; 
-	
+  flex: 0 1 100%;
 }
 
 section {
-  /*Strictly Necessary */
-   height: 400px;
-   order: 2;
-   flex: 0 1 100%;
-	
+/*Strictly Necessary */
+  height: 400px;
+  order: 2;
+  flex: 0 1 100%;
 }
 
 footer {
@@ -114,7 +112,5 @@ footer {
   height: 100px;
   order: 3;
   flex: 0 1 100%;
-	
 }
-
 </style>
