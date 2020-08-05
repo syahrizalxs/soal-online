@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <Loading v-if="isLoading"/>
     <div class="left-content">
      <img src="../assets/login.jpg">
     </div>
@@ -93,10 +94,14 @@
 <script>
 import firebase from '../config/firebase'
 import Swal from 'sweetalert2'
+import Loading from '../components/Loading'
 
 const db = firebase.firestore()
 
 export default {
+  components: {
+    Loading
+  },
   data () {
     return {
       username: '',
@@ -107,11 +112,13 @@ export default {
       phoneNumber: '',
       loginComponent: true,
       role: 'murid',
-      incorrectPassword: false
+      incorrectPassword: false,
+      isLoading: false
     }
   },
   methods: {
     async onLogin () {
+      this.isLoading = true
       const self = this
       var docRef = db.collection('users').doc(this.username)
       docRef.get().then(function (doc) {
@@ -122,9 +129,11 @@ export default {
             self.$router.replace('/')
           } else {
             self.incorrectPassword = true
+            self.isLoading = false
           }
         } else {
           self.incorrectPassword = true
+          self.isLoading = false
         }
       }).catch(function (error) {
         console.log('Error getting document:', error)
