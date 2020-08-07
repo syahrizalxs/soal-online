@@ -7,7 +7,11 @@
             <h4 class="card-title mb-5">Profil Siswa</h4>
             <div class="row">
               <div class="col-3">
-                <img src="../assets/logo.png" alt="profile image" class="img-thumbnail rounded mb-3">
+                <img :src="userInfo.fotoUrl" style="max-width: 200px;" alt="profile image" class="img-thumbnail rounded mb-3">
+                <div class="form-group">
+                  <label for="exampleFormControlFile1">Unggah Foto</label>
+                  <input type="file" accept="image/*" @change="onChangeFile($event)" class="form-control-file" id="file">
+                </div>
               </div>
               <div class="col-9" style="margin-left: -30px;">
                 <div class="row">
@@ -101,7 +105,7 @@
               <div class="row mt-3">
                 <div class="col-12" align="right">
                   <button class="btn btn-outline-danger mx-3">BATAL</button>
-                  <button class="btn btn-success ml-1" @click="onSave()">SIMPAN</button>
+                  <button class="btn btn-success ml-1" @click.prevent="onSave()">SIMPAN</button>
                 </div>
               </div>
             </form>
@@ -113,22 +117,76 @@
 </template>
 
 <script>
+import firebase from '../config/firebase'
+import Swal from 'sweetalert2'
+
+const db = firebase.firestore()
+
 export default {
   data () {
     return {
       userInfo: {
-        kelas: undefined
+        kelas: undefined,
+        fotoUrl: ''
       },
+      file: undefined,
+      show: false,
       isOpenCalender: false,
-      optionsKelas: ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6']
+      optionsKelas: ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6'],
+      empty: '../assets/logo.png'
     }
   },
   created () {
     this.getUserInfo()
+    this.getDetailProfile()
   },
   methods: {
     getUserInfo () {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    },
+    async getDetailProfile () {
+      await db.collection('users')
+        .doc(this.userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+        })
+    },
+    async onSave () {
+      let self = this
+      await db.collection('users')
+      .doc(this.userInfo.username)
+      .update(this.userInfo)
+      .then(function () {
+        Swal.fire('Succesfully', 'Berhasil', 'success')
+        self.$router.go()
+      })
+      .catch(function (error) {
+        console.error('Error writing document: ', error)
+      })
+    },
+    async onChangeFile(evt) {
+      // Get the file from DOM
+      console.log(evt)
+      let self = this
+      var file = document.getElementById('file').files[0];
+      let ref = `profile/${file.name}`
+      var storageRef = firebase.storage().ref(ref);
+
+      let image = evt.target.files[0]
+      
+      // put request upload file to firebase storage
+      await storageRef.put(file).then(async function(snapshot) {
+        const resUrl = await firebase.storage().ref(ref).getDownloadURL()
+        console.log({resUrl})
+        if (resUrl) {
+          self.userInfo.fotoUrl = resUrl
+        }
+      })
+      .catch(e => {
+        Swal.fire('Error', 'Terjadi Kesalahan saat upload foto!', 'error')
+        self.userInfo.fotoUrl = ''
+      })
     }
   }
 }

@@ -1,9 +1,9 @@
 <template>
-  <div class="wrapper">
-    <div class="left-content">
+  <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-8">
      <img src="../assets/login.jpg">
     </div>
-    <div class="right-content">
+    <div class="col-4">
       <div class="container form-wrapper">
         <h5>Selamat Datang di E-Learning SD</h5>
         <b-form class="mt-4" v-if="loginComponent">
@@ -34,7 +34,7 @@
             <p class="text-danger text-center" v-if="incorrectPassword">Username / Password salah!</p>
           <b-button class="login-btn mt-5" @click="onLogin" block>Masuk</b-button>
           <p class="text-muted my-3c" style="text-align: center;">atau</p>
-          <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Daftar</b-button>
+          <b-button variant="outline-success" @click="loginComponent = !loginComponent" block>Daftar</b-button>
         </b-form>
         <b-form class="mt-4" v-if="!loginComponent">
           <h6 class="text-info">Lengkapi form dibawah ini untuk mendaftar</h6>
@@ -83,7 +83,7 @@
           </b-form-group>
           <b-button class="login-btn mt-5" @click="onRegister" :disabled="!username || !password || !confirmPassword || !fullname" block>Daftar</b-button>
           <p class="text-muted my-3" style="text-align: center;">Sudah punya akun ?</p>
-          <b-button class="register-btn" @click="loginComponent = !loginComponent" block>Login</b-button>
+          <b-button variant="outline-success" @click="loginComponent = !loginComponent" block>Login</b-button>
         </b-form>
       </div>
     </div>
@@ -138,56 +138,25 @@ export default {
         fullname: this.fullname,
         role: this.role
       })
-        .then(function () {
-          Swal.fire('Succesfully', 'Registrasi berhasil! Silahkan masuk untuk melanjutkan!', 'success')
-          self.loginComponent = !self.loginComponent
-        })
-        .catch(function (error) {
-          console.error('Error writing document: ', error)
-        })
+      .then(function () {
+        Swal.fire('Succesfully', 'Registrasi berhasil! Silahkan masuk untuk melanjutkan!', 'success')
+        self.loginComponent = !self.loginComponent
+      })
+      .catch(function (error) {
+        console.error('Error writing document: ', error)
+      })
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.wrapper {
-  height: 100%;
-  display: flex;
-  color: #fff;
-}
-.left-content {
-  background-color: map-get($colors, dark);
-  height: 100%;
-  width: 70%;
-  // background-image: url('../assets/login.jpg');
-  // background-repeat: no-repeat;
-  // background-size: cover;
-}
-.right-content {
-  display: flex;
-  background-color: map-get($colors, dark );
-  height: 100%;
-  width: 30%;
-  align-items: center;
-}
-
 .login-btn {
   background-color: map-get($colors, base);
   border: none;
 
   &:hover {
     background-color: map-get($colors, secondary );
-  }
-}
-.register-btn {
-  background-color: transparent;
-  border: 1px solid map-get($colors, red);
-  color: map-get($colors , red );
-
-  &:hover {
-    background-color: map-get($colors, red );
-    color: #fff;
   }
 }
 </style>
