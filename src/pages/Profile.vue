@@ -113,7 +113,7 @@
         </div>
       </div>
     </div>
-  </div>    
+  </div>
 </template>
 
 <script>
@@ -145,48 +145,52 @@ export default {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     },
     async getDetailProfile () {
+      this.$parent.isLoading = true
       await db.collection('users')
         .doc(this.userInfo.username)
         .get()
         .then(res => {
           this.userInfo = res.data()
         })
+      this.$parent.isLoading = false
     },
     async onSave () {
-      let self = this
+      this.$parent.isLoading = true
+      const self = this
       await db.collection('users')
-      .doc(this.userInfo.username)
-      .update(this.userInfo)
-      .then(function () {
-        Swal.fire('Succesfully', 'Berhasil', 'success')
-        self.$router.go()
-      })
-      .catch(function (error) {
-        console.error('Error writing document: ', error)
-      })
+        .doc(this.userInfo.username)
+        .update(this.userInfo)
+        .then(function () {
+          Swal.fire('Succesfully', 'Berhasil', 'success')
+          self.$router.go()
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
+      this.$parent.isLoading = false
     },
-    async onChangeFile(evt) {
+    async onChangeFile (evt) {
       // Get the file from DOM
       console.log(evt)
-      let self = this
-      var file = document.getElementById('file').files[0];
-      let ref = `profile/${file.name}`
-      var storageRef = firebase.storage().ref(ref);
+      const self = this
+      var file = document.getElementById('file').files[0]
+      const ref = `profile/${file.name}`
+      var storageRef = firebase.storage().ref(ref)
 
-      let image = evt.target.files[0]
-      
+      const image = evt.target.files[0]
+
       // put request upload file to firebase storage
-      await storageRef.put(file).then(async function(snapshot) {
+      await storageRef.put(file).then(async function (snapshot) {
         const resUrl = await firebase.storage().ref(ref).getDownloadURL()
-        console.log({resUrl})
+        console.log({ resUrl })
         if (resUrl) {
           self.userInfo.fotoUrl = resUrl
         }
       })
-      .catch(e => {
-        Swal.fire('Error', 'Terjadi Kesalahan saat upload foto!', 'error')
-        self.userInfo.fotoUrl = ''
-      })
+        .catch(e => {
+          Swal.fire('Error', 'Terjadi Kesalahan saat upload foto!', 'error')
+          self.userInfo.fotoUrl = ''
+        })
     }
   }
 }

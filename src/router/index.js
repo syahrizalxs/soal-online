@@ -39,7 +39,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log({next, to, from})
+  console.log({ next, to, from })
   const token = JSON.parse(localStorage.getItem('userInfo'))
   const isLoggedin = !!token
   const isPublic = to.matched.some(record => record.meta.public)
@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
       path: '/login',
       query: { redirect: to.fullPath }
     })
-  }else {
+  } else {
     next()
   }
 })

@@ -22,7 +22,7 @@ export default {
     return {
       array: ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Agama'],
       userInfo: '',
-      link: [{ name: 'Mata Pelajaran', link: '/mata-pelajaran', collapsibleName: 'collapsible-mata-pelajaran'}]
+      link: [{ name: 'Mata Pelajaran', link: '/mata-pelajaran', collapsibleName: 'collapsible-mata-pelajaran' }]
     }
   },
   methods: {

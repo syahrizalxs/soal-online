@@ -1,21 +1,24 @@
 <template>
-  <div class="default-container">
-    <div id="sidebar">
-      <div class="sidebar-top">
-        <b-navbar toggleable="md" type="dark" variant="dark" class="__custom-navbar">
-          <b-navbar-brand>E-Learning</b-navbar-brand>
-        </b-navbar>
+  <div>
+    <my-loading ref="myloading" v-if="isLoading" />
+    <div class="default-container">
+      <div id="sidebar">
+        <div class="sidebar-top">
+          <b-navbar toggleable="md" type="dark" variant="dark" class="__custom-navbar">
+            <b-navbar-brand>E-Learning</b-navbar-brand>
+          </b-navbar>
+        </div>
+        <div class="sidebar-bottom">
+          <DefaultSidebar />
+        </div>
       </div>
-      <div class="sidebar-bottom">
-        <DefaultSidebar />
-      </div>
-    </div>
-    <div id="rightSideWrapper">
-      <header style="z-index: 999;" class="shadow">
-        <DefaultHeader />
-      </header>
-      <div class="ContentBox" style="z-index: 1; overflow: hidden;">
-        <router-view />
+      <div id="rightSideWrapper">
+        <header style="z-index: 999;" class="shadow">
+          <DefaultHeader />
+        </header>
+        <div class="ContentBox" style="z-index: 1;">
+          <router-view />
+        </div>
       </div>
     </div>
   </div>
@@ -29,13 +32,27 @@ export default {
   components: {
     DefaultHeader,
     DefaultSidebar
+  },
+  data () {
+    return {
+      isLoading: false
+    }
+  },
+  methods: {
+    loading () {
+      this.isLoading = true
+    },
+    close () {
+      this.isLoading = false
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
 *{
-    margin: 0px;
+  margin: 0px;
 }
+
 
 #sidebar {
   /*Strictly Necessary */
