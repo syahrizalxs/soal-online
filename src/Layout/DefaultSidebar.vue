@@ -2,8 +2,8 @@
   <div class="wrapper">
     <nav class="sidebar bg-dark text-light">
       <ul>
-        <li class="list-items pointer"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Kelas Saya</span></li>
-        <li class="list-items pointer" :class="[$route.name === 'Mata Pelajaran' ? 'active' : '']" v-b-toggle.collapse-1><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Mata Pelajaran</span></li>
+        <li class="list-items pointer" v-if="!isMurid"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Kelas Saya</span></li>
+        <li class="list-items pointer" :class="[$route.name === 'MataPelajaran' ? 'active' : '']" @click="$router.push('/mata-pelajaran')" v-b-toggle.collapsible-mata-pelasjaran><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Mata Pelajaran</span></li>
           <b-collapse v-for="(item, index) in array" :key="index" id="collapsible-mata-pelajaran">
             <b-list-group>
               <b-list-group-item class="pointer bg-dark ml-2">&#8226; {{item}}</b-list-group-item>
@@ -22,12 +22,15 @@ export default {
     return {
       array: ['Matematika', 'Bahasa Indonesia', 'Bahasa Inggris', 'Agama'],
       userInfo: '',
+      isMurid: false,
+      isGuru: false,
       link: [{ name: 'Mata Pelajaran', link: '/mata-pelajaran', collapsibleName: 'collapsible-mata-pelajaran' }]
     }
   },
   methods: {
     getUserInfo () {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.isMurid = this.userInfo.role === 'murid'
     }
   },
   created () {
