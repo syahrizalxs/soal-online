@@ -19,10 +19,10 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-	position: absolute;
+	position: fixed;
   overflow: hidden;
 	width: 100%;
-	height: 100%;
+  min-height: 100vh;
 	background-color: rgba($color: #000000, $alpha: 0.7);
   z-index: 3;
 }

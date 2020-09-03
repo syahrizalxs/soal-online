@@ -13,10 +13,10 @@
         </div>
       </div>
       <div id="rightSideWrapper">
-        <header style="z-index: 999;" class="shadow">
+        <header style="z-index: 1;" class="shadow">
           <DefaultHeader />
         </header>
-        <div class="ContentBox" style="z-index: 1;">
+        <div class="ContentBox">
           <router-view />
         </div>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container p-2">
+  <div class="container mt-3">
     <div class="row">
       <div class="col-12">
         <div class="card" style="width: 100%;">
