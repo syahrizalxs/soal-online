@@ -5,7 +5,7 @@
     </div>
     <div class="content mt-2">
       <b-row>
-        <b-col cols="3" v-for="(item, index) in classList" :key="index">
+        <b-col sm="1" md="3" lg="4" xl="4" xs="1" v-for="(item, index) in classList" :key="index">
           <Card :items="item" class="mt-3" />
         </b-col>
       </b-row>

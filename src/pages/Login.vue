@@ -33,9 +33,8 @@
             ></b-form-input>
           </b-form-group>
             <p class="text-danger text-center" v-if="incorrectPassword">Username / Password salah!</p>
-          <b-button class="login-btn mt-5" @click="onLogin" block>Masuk</b-button>
-          <p class="text-muted my-3c" style="text-align: center;">atau</p>
-          <b-button variant="outline-success" @click="loginComponent = !loginComponent" block>Daftar</b-button>
+          <b-button class="login-btn mt-4" @click="onLogin" block>Masuk</b-button>
+          <p class="text-muted my-3" style="text-align: center;">Silahkan lapor admin jika belum mendaftar.</p>
         </b-form>
         <b-form class="mt-4" v-if="!loginComponent">
           <h6 class="text-info">Lengkapi form dibawah ini untuk mendaftar</h6>
