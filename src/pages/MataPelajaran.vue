@@ -27,7 +27,7 @@ export default {
         { name: 'Bahasa Indonesia', teacher: 'John S.kom', materi: 23, soal: 12 },
         { name: 'PKN', teacher: 'Joe S.kom', materi: 13, soal: 7 },
         { name: 'Agama Islam', teacher: 'Mira S.ag', materi: 13, soal: 7 },
-        { name: 'Penjaskes', teacher: 'Taslim S.b', materi: 13, soal: 7 },
+        { name: 'Penjaskes', teacher: 'Taslim S.b', materi: 13, soal: 7 }
       ]
     }
   }

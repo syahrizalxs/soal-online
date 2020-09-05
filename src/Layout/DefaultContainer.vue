@@ -53,7 +53,6 @@ export default {
   margin: 0px;
 }
 
-
 #sidebar {
   /*Strictly Necessary */
   position:fixed;

@@ -6,6 +6,8 @@ const Login = () => import(/* webpackChunkName: "Login" */'../pages/Login')
 const MataPelajaran = () => import(/* webpackChunkName: "MataPelajaran" */'../pages/MataPelajaran')
 const Profile = () => import(/* webpackChunkName: "Profile" */'../pages/Profile')
 
+const MasterMataPelajaran = () => import(/* webpackChunkName: "MasterMapel" */'../pages/master/mata-pelajaran')
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -25,6 +27,11 @@ const router = new VueRouter({
           path: '/profile/:id',
           name: 'Profile',
           component: Profile
+        },
+        {
+          path: 'master-mata-pelajaran',
+          name: 'Master Mata Pelajaran',
+          component: MasterMataPelajaran
         }
       ]
     },
