@@ -2,7 +2,7 @@
   <div class="wrapper">
     <nav class="sidebar bg-dark text-light">
       <ul>
-        <li class="list-items pointer" v-if="isGuru"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Kelas Saya</span></li>
+        <li class="list-items pointer" @click="$router.push('/guru/kelas-saya')" v-if="isGuru" :class="[$route.name === 'Kelas Saya' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Kelas Saya</span></li>
         <li class="list-items pointer" @click="$router.push('/master-mata-pelajaran')" v-if="isAdmin" :class="[$route.name === 'Master Mata Pelajaran' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Master Mata Pelajaran</span></li>
         <li class="list-items pointer" @click="$router.push('/master-murid')" v-if="isAdmin" :class="[$route.name === 'Master Murid' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Master Murid</span></li>
         <li class="list-items pointer" @click="$router.push('/master-guru')" v-if="isAdmin" :class="[$route.name === 'Master Guru' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="person-circle"></b-icon><span class="m-2 p-1">Master Guru</span></li>
@@ -36,6 +36,7 @@ export default {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.isMurid = this.userInfo.role === 'murid'
       this.isAdmin = this.userInfo.role === 'admin'
+      this.isGuru = this.userInfo.role === 'guru'
     }
   },
   created () {
