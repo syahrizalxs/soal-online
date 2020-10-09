@@ -13,47 +13,20 @@
 			<div class="col-12">
 			</div>
 		</div>
-		<b-modal id="my-modal" v-model="modalShow" title="Tambah Materi" size="xl" hide-footer>
-			<div>
-				<b-form>
-					<b-form-group
-						id="input-group-1"
-						label="Unggah Video"
-						label-for="input-1"
-					>
-						<div>
-							<b-embed
-								type="iframe"
-								aspect="16by9"
-								:src="form.videoUrl"
-								allowfullscreen
-							></b-embed>
+		<div class="row">
+			<div class="col-12 mb-2" v-for="(item, index) in mataPelajaranList" :key="index">
+				<b-card :title=" 'Pertemuan - ' + item.pertemuanKe" :sub-title="item.namaMataPelajaran">
+					<div class="row">
+						<div class="col-6" align="left">
+							<b-card-text>Nama Materi: {{item.judulMateri}}</b-card-text>
 						</div>
-						 <b-form-file
-								v-model="form.video"
-								id="video"
-								accept="video/mp4,video/x-m4v,video/*"
-								@change="onInputVideo($event)"
-								placeholder="Choose a file or drop it here..."
-								drop-placeholder="Drop file here..."
-							></b-form-file>
-					</b-form-group>
-
-					<b-form-group id="input-group-2" label="Nama Mata Pelajaran:" label-for="input-2">
-						<b-form-input
-							id="input-2"
-							v-model="form.namaMataPelajaran"
-							required
-							placeholder="Nama Mata Pelajaran"
-						></b-form-input>
-					</b-form-group>
-				</b-form>
+						<div class="col-6" align="right">
+							<b-button variant="info">Edit</b-button>
+						</div>
+					</div>
+				</b-card>
 			</div>
-			<div align="right">
-				<b-button type="submit" @click="modalShow = false" class="mr-2" variant="outline-danger">BATAL</b-button>
-				<b-button variant="success" @click.prevent="save">SIMPAN</b-button>
-			</div>
-		</b-modal>
+		</div>
 	</div>
 </template>
 
@@ -63,12 +36,13 @@ import Swal from 'sweetalert2'
 
 const db = firebase.firestore()
 export default {
-  name: 'Master-mata-pelajaran',
+  name: 'kelas-saya',
   data () {
     return {
       form: {},
       modalShow: false,
-      mataPelajaranList: []
+			mataPelajaranList: [],
+			userInfo: {}
     }
   },
   created () {
@@ -98,10 +72,19 @@ export default {
 			this.$parent.isLoading = false
     },
     async getData () {
+			const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      await db.collection('users')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+				})
       this.$parent.isLoading = true
       const data = []
-      await db.collection('matapelajaran')
-        .get()
+			await db.collection('materi')
+				.orderBy('pertemuanKe', 'asc')
+				.where('nip', '==', this.userInfo.nip)
+				.get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             data.push(doc.data())

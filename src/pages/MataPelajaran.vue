@@ -5,9 +5,12 @@
     </div>
     <div class="content mt-2">
       <b-row>
-        <b-col sm="1" md="3" lg="4" xl="4" xs="1" v-for="(item, index) in classList" :key="index">
-          <Card :items="item" class="mt-3" />
-        </b-col>
+        <div class="col-3">
+          <label for="Pilih Mata Pelajaran">
+            Pilih Mata Pelajaran
+          </label>
+          <b-form-select v-model="selected" :options="mataPelajaranList"></b-form-select>
+        </div>
       </b-row>
     </div>
   </div>
@@ -15,12 +18,18 @@
 
 <script>
 import Card from '../components/Card'
+import firebase from '../config/firebase'
+
+const db = firebase.firestore()
 export default {
   components: {
     Card
   },
   data () {
     return {
+      selected: '',
+      userInfo: {},
+      mataPelajaranList: [],
       classList: [
         { name: 'Matematika', teacher: 'Bangbang S.kom', materi: 20, soal: 6 },
         { name: 'Bahasa Inggris', teacher: 'Desi S.kom', materi: 18, soal: 5 },
@@ -30,6 +39,41 @@ export default {
         { name: 'Penjaskes', teacher: 'Taslim S.b', materi: 13, soal: 7 }
       ]
     }
+  },
+  async created () {
+    await this.getUserInfo()
+    await this.getMataPelajaran()
+    this.selected = this.mataPelajaranList[0].value
+  },
+  methods: {
+    async getUserInfo () {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      await db.collection('users')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+				})
+    },
+    async getMataPelajaran () {
+      let data = []
+      await db.collection('matapelajaran')
+				.get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            data.push(doc.data())
+          })
+        })
+        .catch(function (error) {
+          console.log('Error getting documents: ', error)
+        })
+      this.mataPelajaranList = await data.map(item => {
+        return {
+          value: item.kodeMataPelajaran,
+          text: item.namaMataPelajaran 
+        }
+      })
+    },
   }
 }
 </script>

@@ -202,12 +202,21 @@
               </div>
               <div class="row mt-2">
                 <div class="col-6">
-                  <label for="inputState">Kelas</label>
+                  <label for="inputState">Mengajar Kelas</label>
                     <select id="inputState" v-model="userInfo.kelas" class="form-control">
                       <option disabled selected>Pilih Kelas</option>
                       <option v-for="(item, index) in optionsKelas" :key="index" :value="item">{{item}}</option>
                     </select>
                 </div>
+                <div class="col-6">
+                  <label>Mengajar Mata Pelajaran</label>
+                    <select v-model="selectedMataPelajaran" @change="changeMataPelajaran" class="form-control">
+                      <option disabled selected>Pilih Kelas</option>
+                      <option v-for="(item, index) in optionMataPelajaran" :key="index" :value="item">{{item.namaMataPelajaran}}</option>
+                    </select>
+                </div>
+              </div>
+              <div class="row mt-2">
                 <div class="col-6">
                   <label>No. Telephone / Handphone</label>
                   <input type="number" class="form-control" v-model="userInfo.notelp" placeholder="08123456789">
@@ -245,19 +254,26 @@ export default {
       file: undefined,
       show: false,
       isOpenCalender: false,
-      optionsKelas: ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6'],
+      optionsKelas: ['1', '2', '3', '4', '5', '6'],
+      optionMataPelajaran: [],
+      selectedMataPelajaran: {},
       empty: '../assets/logo.png'
     }
   },
   created () {
     this.getUserInfo()
     this.getDetailProfile()
+    this.getListMataPelajaran()
   },
   methods: {
     getUserInfo () {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
       this.isMurid = this.userInfo.role === 'murid'
       this.isGuru = this.userInfo.role === 'guru'
+    },
+    changeMataPelajaran () {
+      this.userInfo.kodeMataPelajaran = this.selectedMataPelajaran.kodeMataPelajaran
+      this.userInfo.namaMataPelajaran = this.selectedMataPelajaran.namaMataPelajaran
     },
     async getDetailProfile () {
       this.$parent.isLoading = true
@@ -268,6 +284,17 @@ export default {
           this.userInfo = res.data()
         })
       this.$parent.isLoading = false
+    },
+    async getListMataPelajaran () {
+      await db.collection('matapelajaran')
+        .get()
+        .then(res => {
+          // res.forEach(item => this.optionsKelas.push(item.data()))
+          res.forEach(item => this.optionMataPelajaran.push(item.data()))
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     async onSave () {
       this.$parent.isLoading = true

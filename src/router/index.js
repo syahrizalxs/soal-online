@@ -45,7 +45,7 @@ const router = new VueRouter({
         },
         {
           path: 'guru/kelas-saya/add',
-          name: 'Kelas Saya',
+          name: 'Kelas Saya Add',
           component: KelasSayaAdd
         },
         {
