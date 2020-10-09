@@ -42,7 +42,7 @@
               style="z-index: 0;"
               class="mt-2"
               v-model="form.filePendukung"
-              id="video"
+              id="file"
               accept="application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.openxmlformats-officedocument.presentationml.presentation"
               @change="onInputFile($event)"
               placeholder="Choose a file or drop it here..."
@@ -150,7 +150,7 @@ export default {
     async onInputFile (evt) {
 			this.$parent.isLoading = true
       const self = this
-      const file = document.getElementById('video').files[0]
+      const file = document.getElementById('file').files[0]
       const ref = `video/${file.name}`
       const storageRef = firebase.storage().ref(ref)
       console.log(file)

@@ -12,6 +12,20 @@
           <b-form-select v-model="selected" :options="mataPelajaranList"></b-form-select>
         </div>
       </b-row>
+      <b-row class="mt-2">
+        <div class="col-12 mt-2" v-for="(item, index) in materiList" :key="index">
+          <b-card :title=" 'Pertemuan - ' + item.data.pertemuanKe" :sub-title="item.data.namaMataPelajaran">
+            <div class="row">
+              <div class="col-6" align="left">
+                <b-card-text>Nama Materi: {{item.data.judulMateri}}</b-card-text>
+              </div>
+              <div class="col-6" align="right">
+                <b-button variant="info" @click="onDetail(item)">Lihat Materi</b-button>
+              </div>
+            </div>
+				  </b-card>
+        </div>
+      </b-row>
     </div>
   </div>
 </template>
@@ -30,6 +44,7 @@ export default {
       selected: '',
       userInfo: {},
       mataPelajaranList: [],
+      materiList: [],
       classList: [
         { name: 'Matematika', teacher: 'Bangbang S.kom', materi: 20, soal: 6 },
         { name: 'Bahasa Inggris', teacher: 'Desi S.kom', materi: 18, soal: 5 },
@@ -44,6 +59,7 @@ export default {
     await this.getUserInfo()
     await this.getMataPelajaran()
     this.selected = this.mataPelajaranList[0].value
+    this.getMataPelajaranList()
   },
   methods: {
     async getUserInfo () {
@@ -74,6 +90,35 @@ export default {
         }
       })
     },
+    async getMataPelajaranList () {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      await db.collection('users')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+				})
+      this.$parent.isLoading = true
+      const data = []
+			await db.collection('materi')
+        .where('kelas', '==', this.userInfo.kelas)
+				.orderBy('pertemuanKe', 'asc')
+        .where('kodeMataPelajaran', '==', this.selected)
+				.get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            data.push({ data: doc.data(), doc: doc.id })
+          })
+        })
+        .catch(function (error) {
+          console.log('Error getting documents: ', error)
+        })
+      this.materiList = data
+      this.$parent.isLoading = false
+    },
+    onDetail (data) {
+      this.$router.push('materi/' + data.doc)
+    }
   }
 }
 </script>

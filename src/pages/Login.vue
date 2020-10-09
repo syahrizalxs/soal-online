@@ -29,6 +29,7 @@
               type="password"
               required
               v-model="password"
+              @keyup.enter="onLogin"
               placeholder="Enter password"
             ></b-form-input>
           </b-form-group>
@@ -125,6 +126,13 @@ export default {
           if (doc.data().password === self.password) {
             const userInfo = doc.data()
             localStorage.setItem('userInfo', JSON.stringify(userInfo))
+            if (userInfo.role === 'admin') {
+              self.$router.replace('/master-mata-pelajaran')
+              return
+            } else if (userInfo.role === 'guru') {
+              self.$router.replace('/guru/kelas-saya')
+              return
+            }
             self.$router.replace('/')
           } else {
             self.incorrectPassword = true

@@ -132,7 +132,7 @@
                   NIP: {{ userInfo.nip || '-'}}
                 </div>
                 <div class="row">
-                  {{ userInfo.kelas }}
+                  Kelas: {{ userInfo.kelas }}
                 </div>
               </div>
             </div>

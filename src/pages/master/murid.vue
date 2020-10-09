@@ -17,12 +17,14 @@
 						<th>Username</th>
 						<th>Nama Lengkap</th>
 						<th>NIS</th>
+						<th>Kelas</th>
 					</tr>
 					<tr  v-for="(item, index) in muridList" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.username }}</td>
             <td>{{ item.fullname }}</td>
             <td>{{ item.nis }}</td>
+            <td>{{ item.kelas }}</td>
           </tr>
 				</table>
 			</div>
@@ -70,6 +72,14 @@
 							placeholder="NIS"
 						></b-form-input>
 					</b-form-group>
+          <b-form-group
+						id="input-group-4"
+						label="Kelas"
+						label-for="input-4"
+					>
+					<b-form-select v-model="form.kelas" :options="optionKelas">
+					</b-form-select>
+					</b-form-group>
 				</b-form>
 			</div>
 			<div align="right">
@@ -95,7 +105,15 @@ export default {
 				nis: ''
 			},
       modalShow: false,
-      muridList: []
+			muridList: [],
+			optionKelas: [
+				{ value: '1', text: 'Kelas 1' },
+				{ value: '2', text: 'Kelas 2' },
+				{ value: '3', text: 'Kelas 3' },
+				{ value: '4', text: 'Kelas 4' },
+				{ value: '5', text: 'Kelas 5' },
+				{ value: '6', text: 'Kelas 6' }
+			]
     }
   },
   created () {
@@ -120,18 +138,19 @@ export default {
       this.$parent.isLoading = false
     },
     async save () {
-      const self = this
+      let self = this
       db.collection('users').doc(this.form.username).set({
         fullname: this.form.fullname,
         username: this.form.username,
 				password: '123qwe',
 				nis: this.form.nis,
+				kelas: this.form.kelas,
         role: 'murid'
       })
         .then(function () {
           Swal.fire('Succesfully', 'Berhasil!', 'success')
           self.getData()
-          this.form = {}
+          self.form = {}
           self.modalShow = false
         })
         .catch(function (error) {

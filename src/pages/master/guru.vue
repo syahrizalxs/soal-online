@@ -59,7 +59,7 @@
           </b-form-group>
           <b-form-group
 						id="input-group-3"
-						label="Nama Lengkap"
+						label="NIP"
 						label-for="input-3"
 					>
 						<b-form-input
@@ -69,6 +69,26 @@
 							required
 							placeholder="NIP"
 						></b-form-input>
+					</b-form-group>
+          <b-form-group
+						id="input-group-4"
+						label="Mengajar Kelas"
+						label-for="input-4"
+					>
+						<select id="inputState" v-model="form.kelas" class="form-control">
+							<option disabled selected>Pilih Kelas</option>
+							<option v-for="(item, index) in optionsKelas" :key="index" :value="item">{{item}}</option>
+						</select>
+					</b-form-group>
+          <b-form-group
+						id="input-group-5"
+						label="Mengajar Mata Pelajaran"
+						label-for="input-5"
+					>
+						<select v-model="selectedMataPelajaran" @change="changeMataPelajaran" class="form-control">
+							<option disabled selected>Pilih Kelas</option>
+							<option v-for="(item, index) in optionsMataPelajaran" :key="index" :value="item">{{item.namaMataPelajaran}}</option>
+						</select>
 					</b-form-group>
 				</b-form>
 			</div>
@@ -92,14 +112,21 @@ export default {
       form: {
 				username: '',
 				fullname: '',
-				nip: ''
+				nip: '',
+				kelas: '',
+				namaMataPelajaran: '',
+				kodeMataPelajaran: '',
 			},
+			optionsKelas: ['1', '2', '3', '4', '5', '6'],
+			optionsMataPelajaran: [],
       modalShow: false,
-      guruList: []
+			guruList: [],
+			selectedMataPelajaran: ''
     }
   },
   created () {
-    this.getData()
+		this.getData()
+		this.getListMataPelajaran()
   },
   methods: {
     async getData () {
@@ -118,6 +145,21 @@ export default {
         })
       this.guruList = data
       this.$parent.isLoading = false
+		},
+		async getListMataPelajaran () {
+      await db.collection('matapelajaran')
+        .get()
+        .then(res => {
+          // res.forEach(item => this.optionsKelas.push(item.data()))
+          res.forEach(item => this.optionsMataPelajaran.push(item.data()))
+        })
+        .catch(err => {
+          console.log(err)
+        })
+		},
+		changeMataPelajaran () {
+      this.form.kodeMataPelajaran = this.selectedMataPelajaran.kodeMataPelajaran
+      this.form.namaMataPelajaran = this.selectedMataPelajaran.namaMataPelajaran
     },
     async save () {
       const self = this
@@ -126,7 +168,10 @@ export default {
 				username: this.form.username,
 				nip: this.form.nip,
         password: '123qwe',
-        role: 'guru'
+				role: 'guru',
+				kelas: this.form.kelas,
+				namaMataPelajaran: this.form.namaMataPelajaran,
+				kodeMataPelajaran: this.form.kodeMataPelajaran
       })
         .then(function () {
           Swal.fire('Succesfully', 'Berhasil!', 'success')
