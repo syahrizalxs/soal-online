@@ -10,7 +10,8 @@ const MasterMataPelajaran = () => import(/* webpackChunkName: "MasterMapel" */'.
 const MasterMurid = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/murid')
 const MasterGuru = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/guru')
 
-const KelasSaya = () => import(/* webpackChunkName: "KelasSaya" */'../pages/guru/kelas-saya')
+const KelasSaya = () => import(/* webpackChunkName: "KelasSaya" */'../pages/guru/kelas/kelas-saya')
+const KelasSayaAdd = () => import(/* webpackChunkName: "KelasSaya" */'../pages/guru/kelas/kelas-saya-add')
 
 Vue.use(VueRouter)
 
@@ -41,6 +42,11 @@ const router = new VueRouter({
           path: 'guru/kelas-saya',
           name: 'Kelas Saya',
           component: KelasSaya
+        },
+        {
+          path: 'guru/kelas-saya/add',
+          name: 'Kelas Saya',
+          component: KelasSayaAdd
         },
         {
           path: 'master-murid',

@@ -74,7 +74,7 @@
 			</div>
 			<div align="right">
 				<b-button type="submit" @click="modalShow = false" class="mr-2" variant="outline-danger">BATAL</b-button>
-				<b-button variant="success" @click.prevent="save">SIMPAN</b-button>
+				<b-button variant="success" :disabled="!form.username || !form.fullname || !form.nis" @click.prevent="save">SIMPAN</b-button>
 			</div>
 		</b-modal>
 	</div>
@@ -89,7 +89,11 @@ export default {
   name: 'Master-murid',
   data () {
     return {
-      form: {},
+      form: {
+				username: '',
+				fullname: '',
+				nis: ''
+			},
       modalShow: false,
       muridList: []
     }
@@ -120,7 +124,8 @@ export default {
       db.collection('users').doc(this.form.username).set({
         fullname: this.form.fullname,
         username: this.form.username,
-        password: '123qwe',
+				password: '123qwe',
+				nis: this.form.nis,
         role: 'murid'
       })
         .then(function () {

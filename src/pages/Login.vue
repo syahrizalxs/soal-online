@@ -137,22 +137,6 @@ export default {
       }).catch(function (error) {
         console.log('Error getting document:', error)
       })
-    },
-    async onRegister () {
-      const self = this
-      db.collection('users').doc(this.username).set({
-        username: this.username,
-        password: this.password,
-        fullname: this.fullname,
-        role: this.role
-      })
-        .then(function () {
-          Swal.fire('Succesfully', 'Registrasi berhasil! Silahkan masuk untuk melanjutkan!', 'success')
-          self.loginComponent = !self.loginComponent
-        })
-        .catch(function (error) {
-          console.error('Error writing document: ', error)
-        })
     }
   }
 }

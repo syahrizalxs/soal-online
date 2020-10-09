@@ -2,7 +2,7 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-12">
-        <div class="card" style="width: 100%;">
+        <div v-if="isMurid" class="card" style="width: 100%;">
           <div class="card-body">
             <h4 class="card-title mb-5">Profil Siswa</h4>
             <div class="row">
@@ -112,6 +112,117 @@
           </div>
         </div>
       </div>
+      <div class="col-12">
+        <div v-if="isGuru" class="card" style="width: 100%;">
+          <div class="card-body">
+            <h4 class="card-title mb-5">Profil Guru</h4>
+            <div class="row">
+              <div class="col-3">
+                <img :src="userInfo.fotoUrl" style="max-width: 200px;" alt="profile image" class="img-thumbnail rounded mb-3">
+                <div class="form-group">
+                  <label for="exampleFormControlFile1">Unggah Foto</label>
+                  <input type="file" accept="image/*" @change="onChangeFile($event)" class="form-control-file" id="file">
+                </div>
+              </div>
+              <div class="col-9" style="margin-left: -30px;">
+                <div class="row">
+                  <h5 class="text-muted">{{userInfo.fullname}}</h5>
+                </div>
+                <div class="row">
+                  NIP: {{ userInfo.nip || '-'}}
+                </div>
+                <div class="row">
+                  {{ userInfo.kelas }}
+                </div>
+              </div>
+            </div>
+            <form>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" v-model="userInfo.username" disabled>
+                    <small id="emailHelp" class="form-text text-muted">Username tidak dapat dirubah.</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" v-model="userInfo.password" placeholder="Nama Lengkap" required>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <h5 class="mb-4">Data Diri</h5>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" class="form-control" v-model="userInfo.fullname" placeholder="Nama Lengkap" required>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>NIP</label>
+                    <input type="text" class="form-control" disabled v-model="userInfo.nip" placeholder="Nomer Induk Siswa" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Tempat Lahir</label>
+                    <input type="text" class="form-control" v-model="userInfo.tempatLahir" placeholder="Tempat Lahir" required>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Tanggal Lahir</label>
+                    <input type="text" class="form-control" v-model="userInfo.tanggalLahir" v-mask="'##/##/####'" placeholder="DD/MM/YYYY" required>
+                    <small id="emailHelp" class="form-text text-muted">Contoh: 01/12/2020</small>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <label> Jenis Kelamin</label><br>
+                  <div class="form-check">
+                    <input class="form-check-input" v-model="userInfo.jenisKelamin" type="radio" value="Laki - Laki">
+                    <label class="form-check-label text-muted">Laki - Laki</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" v-model="userInfo.jenisKelamin" type="radio" value="Perempuan">
+                    <label class="form-check-label text-muted">Perempuan</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label>Alamat</label>
+                  <textarea type="text" class="form-control" v-model="userInfo.alamat" placeholder="Alamat"></textarea>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-6">
+                  <label for="inputState">Kelas</label>
+                    <select id="inputState" v-model="userInfo.kelas" class="form-control">
+                      <option disabled selected>Pilih Kelas</option>
+                      <option v-for="(item, index) in optionsKelas" :key="index" :value="item">{{item}}</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                  <label>No. Telephone / Handphone</label>
+                  <input type="number" class="form-control" v-model="userInfo.notelp" placeholder="08123456789">
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12" align="right">
+                  <button class="btn btn-outline-danger mx-3">BATAL</button>
+                  <button class="btn btn-success ml-1" @click.prevent="onSave()">SIMPAN</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -129,6 +240,8 @@ export default {
         kelas: undefined,
         fotoUrl: ''
       },
+      isMurid: false,
+      isGuru: false,
       file: undefined,
       show: false,
       isOpenCalender: false,
@@ -143,6 +256,8 @@ export default {
   methods: {
     getUserInfo () {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      this.isMurid = this.userInfo.role === 'murid'
+      this.isGuru = this.userInfo.role === 'guru'
     },
     async getDetailProfile () {
       this.$parent.isLoading = true

@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
+import { store } from './store/store'
 import App from './App.vue'
 import router from './router'
 
@@ -12,6 +14,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false
 
+Vue.use(Vuex)
 Vue.use(VCalendar, {
   componentPrefix: 'vc' // Use <vc-calendar /> instead of <v-calendar />
 })
@@ -24,5 +27,6 @@ Vue.component('my-loading', Loading)
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

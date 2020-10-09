@@ -12,7 +12,7 @@
               <b-list-group-item class="pointer bg-dark ml-2">&#8226; {{item}}</b-list-group-item>
             </b-list-group>
           </b-collapse>
-          <li class="list-items pointer" :class="[$route.name === 'Profile' ? 'active' : '']" v-if="isMurid" @click="$router.push('/profile/' + userInfo.username)"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Profile</span></li>
+          <li class="list-items pointer" :class="[$route.name === 'Profile' ? 'active' : '']" v-if="isMurid || isGuru" @click="$router.push('/profile/' + userInfo.username)"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Profile</span></li>
       </ul>
     </nav>
   </div>

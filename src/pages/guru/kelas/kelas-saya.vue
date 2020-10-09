@@ -5,7 +5,7 @@
 				<h4>Materi Saya</h4>
 			</div>
 			<div class="col-8" align="right">
-				<b-button variant="outline-info" @click="modalShow = true">+ Tambah Materi</b-button>
+				<b-button variant="outline-info" @click="$router.push('/guru/kelas-saya/add')">+ Tambah Materi</b-button>
 			</div>
 		</div>
 		<hr>
@@ -21,6 +21,14 @@
 						label="Unggah Video"
 						label-for="input-1"
 					>
+						<div>
+							<b-embed
+								type="iframe"
+								aspect="16by9"
+								:src="form.videoUrl"
+								allowfullscreen
+							></b-embed>
+						</div>
 						 <b-form-file
 								v-model="form.video"
 								id="video"
@@ -50,7 +58,7 @@
 </template>
 
 <script>
-import firebase from '../../config/firebase'
+import firebase from '../../../config/firebase'
 import Swal from 'sweetalert2'
 
 const db = firebase.firestore()
@@ -64,10 +72,13 @@ export default {
     }
   },
   created () {
-    this.getData()
+		this.getData()
+		// this.$store.commit('changeName', 'Ariz')
+		// console.log(this.$store.getters.name)
   },
   methods: {
     async onInputVideo (evt) {
+			this.$parent.isLoading = true
       const self = this
       const file = document.getElementById('video').files[0]
       const ref = `video/${file.name}`
@@ -83,7 +94,8 @@ export default {
         .catch(e => {
           console.log(e)
           Swal.fire('Error', 'Terjadi Kesalahan saat upload foto!', 'error')
-        })
+				})
+			this.$parent.isLoading = false
     },
     async getData () {
       this.$parent.isLoading = true
