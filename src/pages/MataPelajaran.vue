@@ -119,6 +119,11 @@ export default {
     onDetail (data) {
       this.$router.push('materi/' + data.doc)
     }
+  },
+  watch: {
+    selected () {
+      this.getMataPelajaranList()
+    }
   }
 }
 </script>
