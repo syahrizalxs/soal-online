@@ -80,16 +80,16 @@
 							<option v-for="(item, index) in optionsKelas" :key="index" :value="item">{{item}}</option>
 						</select>
 					</b-form-group>
-          <b-form-group
+          <!-- <b-form-group
 						id="input-group-5"
 						label="Mengajar Mata Pelajaran"
 						label-for="input-5"
 					>
 						<select v-model="selectedMataPelajaran" @change="changeMataPelajaran" class="form-control">
-							<option disabled selected>Pilih Kelas</option>
+							<option disabled selected>Pilih Mata Pelajaran</option>
 							<option v-for="(item, index) in optionsMataPelajaran" :key="index" :value="item">{{item.namaMataPelajaran}}</option>
 						</select>
-					</b-form-group>
+					</b-form-group> -->
 				</b-form>
 			</div>
 			<div align="right">
@@ -169,9 +169,7 @@ export default {
 				nip: this.form.nip,
         password: '123qwe',
 				role: 'guru',
-				kelas: this.form.kelas,
-				namaMataPelajaran: this.form.namaMataPelajaran,
-				kodeMataPelajaran: this.form.kodeMataPelajaran
+				kelas: this.form.kelas
       })
         .then(function () {
           Swal.fire('Succesfully', 'Berhasil!', 'success')

@@ -50,24 +50,25 @@
             ></b-form-file>
 					</b-form-group>
 
-					<b-form-group id="input-group-2" label="Nama Mata Pelajaran:" label-for="input-2">
+					<b-form-group id="input-group-2" label="Kelas:" label-for="input-2">
 						<b-form-input
 							id="input-2"
-							v-model="form.namaMataPelajaran"
+							v-model="form.kelas"
 							disabled
 							required
-							placeholder="Nama Mata Pelajaran"
+							placeholder="Kelas"
 						></b-form-input>
 					</b-form-group>
 
-					<b-form-group id="input-group-3" label="Kelas" label-for="input-3">
-						<b-form-input
-							id="input-3"
-							disabled
-							v-model="form.kelas"
-							required
-							placeholder="Nama Mata Pelajaran"
-						></b-form-input>
+					<b-form-group
+						id="input-group-5"
+						label="Mengajar Mata Pelajaran"
+						label-for="input-5"
+					>
+						<select v-model="selectedMataPelajaran" @change="changeMataPelajaran" class="form-control">
+							<option disabled selected>Pilih Mata Pelajaran</option>
+							<option v-for="(item, index) in optionsMataPelajaran" :key="index" :value="item">{{item.namaMataPelajaran}}</option>
+						</select>
 					</b-form-group>
 
 					<b-form-group id="input-group-4" label="Pertemuan Ke:" label-for="input-4" description="Isi dengan angka. Misal Pertemuan ke 1 harap isi dengan angka 1">
@@ -105,13 +106,31 @@ export default {
 			},
       modalShow: false,
 			mataPelajaranList: [],
-			userInfo: {}
+			userInfo: {},
+			optionsMataPelajaran: [],
+			selectedMataPelajaran: ''
     }
   },
   created () {
 		this.getInfoGuru()
+		this.getListMataPelajaran()
 	},
   methods: {
+		changeMataPelajaran () {
+      this.form.kodeMataPelajaran = this.selectedMataPelajaran.kodeMataPelajaran
+      this.form.namaMataPelajaran = this.selectedMataPelajaran.namaMataPelajaran
+    },
+		async getListMataPelajaran () {
+      await db.collection('matapelajaran')
+        .get()
+        .then(res => {
+          // res.forEach(item => this.optionsKelas.push(item.data()))
+          res.forEach(item => this.optionsMataPelajaran.push(item.data()))
+        })
+        .catch(err => {
+          console.log(err)
+        })
+		},
 		async getInfoGuru () {
 			const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       await db.collection('users')

@@ -122,6 +122,7 @@ export default {
       const self = this
       var docRef = db.collection('users').doc(this.username)
       docRef.get().then(function (doc) {
+        console.log(doc.data())
         if (doc.exists) {
           if (doc.data().password === self.password) {
             const userInfo = doc.data()
