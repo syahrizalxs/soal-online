@@ -1,7 +1,7 @@
 <template>
   <div class="mata-pelajaran">
-    <div class="heading">
-      <h3 class="text-center">Mata Pelajaran Saya</h3>
+    <div class="heading mb-3">
+      <h3 class="text-left">Mata Pelajaran Saya</h3>
     </div>
     <div class="content mt-2">
       <b-row>
@@ -12,7 +12,7 @@
           <b-form-select v-model="selected" :options="mataPelajaranList"></b-form-select>
         </div>
       </b-row>
-      <b-row class="mt-2">
+      <b-row class="mt-2" v-if="materiList.length > 0">
         <div class="col-12 mt-2" v-for="(item, index) in materiList" :key="index">
           <b-card :title=" 'Pertemuan - ' + item.data.pertemuanKe" :sub-title="item.data.namaMataPelajaran">
             <div class="row">
@@ -25,6 +25,9 @@
             </div>
 				  </b-card>
         </div>
+      </b-row>
+      <b-row v-else>
+        <b-col class="text-center m-5"> <p>Materi Belum tersedia</p> </b-col>
       </b-row>
     </div>
   </div>
@@ -56,10 +59,12 @@ export default {
     }
   },
   async created () {
+    this.$parent.isLoading = true
     await this.getUserInfo()
     await this.getMataPelajaran()
     this.selected = this.mataPelajaranList[0].value
     this.getMataPelajaranList()
+    this.$parent.isLoading = false
   },
   methods: {
     async getUserInfo () {
