@@ -2,7 +2,7 @@
 	<div class="mata-pelajaran">
 		<div class="row">
 			<div class="col-4">
-				<h4>Tambah Materi</h4>
+				<h4>Edit Materi</h4>
 			</div>
 		</div>
 		<hr>
@@ -25,13 +25,14 @@
 					>
             <b-form-file
               style="z-index: 0;"
-              class="mt-2"
+              class="mt-2 mb-2"
               id="video"
               accept="video/mp4,video/x-m4v,video/*"
               @change="onInputVideo($event)"
               placeholder="Choose a file or drop it here..."
               drop-placeholder="Drop file here..."
             ></b-form-file>
+            <a :href="form.videoUrl" target="_blank" rel="noopener noreferrer">Lihat Video Materi</a>
 					</b-form-group>
 
 					<b-form-group
@@ -40,14 +41,14 @@
 					>
             <b-form-file
               style="z-index: 0;"
-              class="mt-2"
-              v-model="form.filePendukung"
+              class="mt-2 mb-2"
               id="file"
               accept="application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.openxmlformats-officedocument.presentationml.presentation"
               @change="onInputFile($event)"
               placeholder="Choose a file or drop it here..."
               drop-placeholder="Drop file here..."
             ></b-form-file>
+            <a :href="form.filePendukung" target="_blank" rel="noopener noreferrer">Lihat File Pendukung</a>
 					</b-form-group>
 
 					<b-form-group id="input-group-2" label="Kelas:" label-for="input-2">
@@ -114,8 +115,22 @@ export default {
   created () {
     this.getInfoGuru()
     this.getListMataPelajaran()
+    this.getData()
   },
   methods: {
+    async getData () {
+      await db.collection('materi').doc(this.$route.params.id).get()
+        .then(doc => {
+          if (doc.exists) {
+            this.form = doc.data()
+          }
+        })
+      this.selectedMataPelajaran = {
+        namaMataPelajaran: this.form.namaMataPelajaran,
+        kodeMataPelajaran: this.form.kodeMataPelajaran
+      }
+      document.getElementById('video').placeholder = this.form.videoUrl
+    },
     changeMataPelajaran () {
       this.form.kodeMataPelajaran = this.selectedMataPelajaran.kodeMataPelajaran
       this.form.namaMataPelajaran = this.selectedMataPelajaran.namaMataPelajaran

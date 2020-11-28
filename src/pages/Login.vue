@@ -120,21 +120,19 @@ export default {
     async onLogin () {
       this.isLoading = true
       const self = this
-      var docRef = db.collection('users').doc(this.username)
+      var docRef = await db.collection('users').doc(this.username)
       docRef.get().then(function (doc) {
-        console.log(doc.data())
         if (doc.exists) {
           if (doc.data().password === self.password) {
             const userInfo = doc.data()
             localStorage.setItem('userInfo', JSON.stringify(userInfo))
-            if (userInfo.role === 'admin') {
+            if (userInfo.role.toString() === 'admin') {
               self.$router.replace('/master-mata-pelajaran')
-              return
-            } else if (userInfo.role === 'guru') {
+            } else if (userInfo.role.toString() === 'guru') {
               self.$router.replace('/guru/kelas-saya')
-              return
+            } else {
+              self.$router.replace('/mata-pelajaran')
             }
-            self.$router.replace('/')
           } else {
             self.incorrectPassword = true
             self.isLoading = false

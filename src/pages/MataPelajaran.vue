@@ -74,12 +74,12 @@ export default {
         .get()
         .then(res => {
           this.userInfo = res.data()
-				})
+        })
     },
     async getMataPelajaran () {
-      let data = []
+      const data = []
       await db.collection('matapelajaran')
-				.get()
+        .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             data.push(doc.data())
@@ -91,7 +91,7 @@ export default {
       this.mataPelajaranList = await data.map(item => {
         return {
           value: item.kodeMataPelajaran,
-          text: item.namaMataPelajaran 
+          text: item.namaMataPelajaran
         }
       })
     },
@@ -102,14 +102,14 @@ export default {
         .get()
         .then(res => {
           this.userInfo = res.data()
-				})
+        })
       this.$parent.isLoading = true
       const data = []
-			await db.collection('materi')
+      await db.collection('materi')
         .where('kelas', '==', this.userInfo.kelas)
-				.orderBy('pertemuanKe', 'asc')
+        .orderBy('pertemuanKe', 'asc')
         .where('kodeMataPelajaran', '==', this.selected)
-				.get()
+        .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             data.push({ data: doc.data(), doc: doc.id })

@@ -8,20 +8,39 @@
 				<b-button variant="outline-info" @click="$router.push('/guru/kelas-saya/add')">+ Tambah Materi</b-button>
 			</div>
 		</div>
+    <div class="row">
+      <div class="col">
+        <b-form-group
+						id="input-group-5"
+						label="Filter"
+						label-for="input-5"
+					>
+						<select v-model="selectedMataPelajaran" class="form-control">
+							<option disabled selected>Pilih Mata Pelajaran</option>
+							<option v-for="(item, index) in optionsMataPelajaran" :key="index" :value="item">{{item}}</option>
+						</select>
+					</b-form-group>
+      </div>
+    </div>
 		<hr>
 		<div class="row">
 			<div class="col-12">
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-12 mb-2" v-for="(item, index) in mataPelajaranList" :key="index">
+			<div class="col-12 mb-2" v-for="(item, index) in filtered" :key="index">
 				<b-card :title=" 'Pertemuan - ' + item.pertemuanKe" :sub-title="item.namaMataPelajaran">
 					<div class="row">
 						<div class="col-6" align="left">
 							<b-card-text>Nama Materi: {{item.judulMateri}}</b-card-text>
 						</div>
 						<div class="col-6" align="right">
-							<b-button variant="info">Edit</b-button>
+							<b-button variant="info" @click="onEdit(item)">
+                <b-icon icon="pencil"></b-icon>
+              </b-button>
+							<b-button variant="danger" class="ml-2" @click="onDelete(item)">
+                <b-icon icon="trash"></b-icon>
+              </b-button>
 						</div>
 					</div>
 				</b-card>
@@ -41,18 +60,58 @@ export default {
     return {
       form: {},
       modalShow: false,
-			mataPelajaranList: [],
-			userInfo: {}
+      mataPelajaranList: [],
+      userInfo: {},
+      selectedMataPelajaran: '',
+      optionsMataPelajaran: []
+    }
+  },
+  computed: {
+    filtered () {
+      return this.mataPelajaranList.filter(item => item.namaMataPelajaran === this.selectedMataPelajaran)
     }
   },
   created () {
-		this.getData()
-		// this.$store.commit('changeName', 'Ariz')
-		// console.log(this.$store.getters.name)
+    this.getData()
+    // this.$store.commit('changeName', 'Ariz')
+    // console.log(this.$store.getters.name)
   },
   methods: {
+    onEdit (params) {
+      this.$router.push('kelas-saya/' + params.id)
+    },
+    onDelete (params) {
+      let doc = params.id
+      let self = this
+      Swal.fire({
+        title: 'Apakah anda yakin ?',
+        text: "Ini tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Hapus'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await db.collection('materi').doc(doc).delete().then(function() {
+            Swal.fire(
+              'Terhapus',
+              'Berhasil Menghapus Data.',
+              'success'
+            )
+            self.getData()
+          }).catch(function(error) {
+            Swal.fire(
+              'Gagal!',
+              'Terjadi Kesalahan',
+              'error'
+            )
+          })
+        }
+      })
+    },
     async onInputVideo (evt) {
-			this.$parent.isLoading = true
+      this.$parent.isLoading = true
       const self = this
       const file = document.getElementById('video').files[0]
       const ref = `video/${file.name}`
@@ -68,32 +127,38 @@ export default {
         .catch(e => {
           console.log(e)
           Swal.fire('Error', 'Terjadi Kesalahan saat upload foto!', 'error')
-				})
-			this.$parent.isLoading = false
+        })
+      this.$parent.isLoading = false
     },
     async getData () {
-			const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       await db.collection('users')
         .doc(userInfo.username)
         .get()
         .then(res => {
           this.userInfo = res.data()
-				})
+        })
       this.$parent.isLoading = true
       const data = []
-			await db.collection('materi')
-				.orderBy('pertemuanKe', 'asc')
-				.where('nip', '==', this.userInfo.nip)
-				.get()
+      await db.collection('materi')
+        .orderBy('pertemuanKe', 'asc')
+        .where('nip', '==', this.userInfo.nip)
+        .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             data.push(doc.data())
+            data.forEach(item => item.id = doc.id)
           })
         })
         .catch(function (error) {
           console.log('Error getting documents: ', error)
         })
       this.mataPelajaranList = data
+      let list = this.mataPelajaranList.map(item => {
+        return item.namaMataPelajaran
+      })
+      this.optionsMataPelajaran = [...new Set(list)]
+      this.selectedMataPelajaran = this.optionsMataPelajaran[0]
       this.$parent.isLoading = false
     },
     async save () {

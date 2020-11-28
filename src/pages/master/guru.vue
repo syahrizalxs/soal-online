@@ -17,12 +17,21 @@
 						<th>Username</th>
 						<th>Nama Lengkap</th>
 						<th>NIP</th>
+						<th>Aksi</th>
 					</tr>
 					<tr  v-for="(item, index) in guruList" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.username }}</td>
             <td>{{ item.fullname }}</td>
             <td>{{ item.nip }}</td>
+						<td class="text-center">
+							<b-button variant="primary" @click="onEdit(item)" class="m-1">
+                <b-icon icon="pencil"></b-icon>
+              </b-button>
+              <b-button variant="danger" @click="onDelete(item)" class="m-1s">
+                <b-icon icon="trash"></b-icon>
+              </b-button>
+						</td>
           </tr>
 				</table>
 			</div>
@@ -39,6 +48,7 @@
 						<b-form-input
 							id="input-1"
 							v-model="form.username"
+							:disabled="isEdit"
 							type="text"
 							required
 							placeholder="Username"
@@ -65,6 +75,7 @@
 						<b-form-input
 							id="input-2"
 							v-model="form.nip"
+							:disabled="isEdit"
 							type="text"
 							required
 							placeholder="NIP"
@@ -110,25 +121,69 @@ export default {
   data () {
     return {
       form: {
-				username: '',
-				fullname: '',
-				nip: '',
-				kelas: '',
-				namaMataPelajaran: '',
-				kodeMataPelajaran: '',
-			},
-			optionsKelas: ['1', '2', '3', '4', '5', '6'],
-			optionsMataPelajaran: [],
-      modalShow: false,
-			guruList: [],
-			selectedMataPelajaran: ''
+        username: '',
+        fullname: '',
+        nip: '',
+        kelas: '',
+        namaMataPelajaran: '',
+        kodeMataPelajaran: ''
+      },
+      optionsKelas: ['1', '2', '3', '4', '5', '6'],
+      optionsMataPelajaran: [],
+			modalShow: false,
+			isEdit: false,
+      guruList: [],
+      selectedMataPelajaran: ''
     }
   },
   created () {
-		this.getData()
-		this.getListMataPelajaran()
-  },
+    this.getData()
+    this.getListMataPelajaran()
+	},
+	watch: {
+		modalShow () {
+			if (!this.modalShow) {
+				this.form = {}
+				this.isEdit = false
+			}
+		}
+	},
   methods: {
+		onEdit (item) {
+      this.modalShow = true
+			this.isEdit = true
+			this.form = item
+    },
+    onDelete (item) {
+      let doc = item.username
+      let self = this
+      Swal.fire({
+        title: 'Apakah anda yakin ?',
+        text: "Ini tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Hapus'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          db.collection('users').doc(doc).delete().then(function() {
+            Swal.fire(
+              'Terhapus',
+              'Berhasil Menghapus Data.',
+              'success'
+            )
+            self.getData()
+          }).catch(function(error) {
+            Swal.fire(
+              'Gagal!',
+              'Terjadi Kesalahan',
+              'error'
+            )
+          })
+        }
+      })
+		},
     async getData () {
       this.$parent.isLoading = true
       const data = []
@@ -145,8 +200,8 @@ export default {
         })
       this.guruList = data
       this.$parent.isLoading = false
-		},
-		async getListMataPelajaran () {
+    },
+    async getListMataPelajaran () {
       await db.collection('matapelajaran')
         .get()
         .then(res => {
@@ -156,8 +211,8 @@ export default {
         .catch(err => {
           console.log(err)
         })
-		},
-		changeMataPelajaran () {
+    },
+    changeMataPelajaran () {
       this.form.kodeMataPelajaran = this.selectedMataPelajaran.kodeMataPelajaran
       this.form.namaMataPelajaran = this.selectedMataPelajaran.namaMataPelajaran
     },
@@ -165,11 +220,11 @@ export default {
       const self = this
       db.collection('users').doc(this.form.username).set({
         fullname: this.form.fullname,
-				username: this.form.username,
-				nip: this.form.nip,
+        username: this.form.username,
+        nip: this.form.nip,
         password: '123qwe',
-				role: 'guru',
-				kelas: this.form.kelas
+        role: 'guru',
+        kelas: this.form.kelas
       })
         .then(function () {
           Swal.fire('Succesfully', 'Berhasil!', 'success')

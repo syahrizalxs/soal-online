@@ -18,6 +18,7 @@
 						<th>Nama Lengkap</th>
 						<th>NIS</th>
 						<th>Kelas</th>
+						<th>Aksi</th>
 					</tr>
 					<tr  v-for="(item, index) in muridList" :key="index">
             <td>{{ index + 1 }}</td>
@@ -25,6 +26,14 @@
             <td>{{ item.fullname }}</td>
             <td>{{ item.nis }}</td>
             <td>{{ item.kelas }}</td>
+						<td class="text-center">
+							<b-button variant="primary" @click="onEdit(item)" class="m-1">
+                <b-icon icon="pencil"></b-icon>
+              </b-button>
+              <b-button variant="danger" @click="onDelete(item)" class="m-1s">
+                <b-icon icon="trash"></b-icon>
+              </b-button>
+						</td>
           </tr>
 				</table>
 			</div>
@@ -41,6 +50,7 @@
 						<b-form-input
 							id="input-1"
 							v-model="form.username"
+							:disabled="isEdit"
 							type="text"
 							required
 							placeholder="Username"
@@ -67,6 +77,7 @@
 						<b-form-input
 							id="input-2"
 							v-model="form.nis"
+							:disabled="isEdit"
 							type="text"
 							required
 							placeholder="NIS"
@@ -100,26 +111,70 @@ export default {
   data () {
     return {
       form: {
-				username: '',
-				fullname: '',
-				nis: ''
-			},
+        username: '',
+        fullname: '',
+        nis: ''
+      },
       modalShow: false,
 			muridList: [],
-			optionKelas: [
-				{ value: '1', text: 'Kelas 1' },
-				{ value: '2', text: 'Kelas 2' },
-				{ value: '3', text: 'Kelas 3' },
-				{ value: '4', text: 'Kelas 4' },
-				{ value: '5', text: 'Kelas 5' },
-				{ value: '6', text: 'Kelas 6' }
-			]
+			isEdit: false,
+      optionKelas: [
+        { value: '1', text: 'Kelas 1' },
+        { value: '2', text: 'Kelas 2' },
+        { value: '3', text: 'Kelas 3' },
+        { value: '4', text: 'Kelas 4' },
+        { value: '5', text: 'Kelas 5' },
+        { value: '6', text: 'Kelas 6' }
+      ]
     }
   },
   created () {
     this.getData()
-  },
+	},
+	watch: {
+		modalShow () {
+			if (!this.modalShow) {
+				this.form = {}
+				this.isEdit = false
+			}
+		}
+	},
   methods: {
+		onEdit (item) {
+      this.modalShow = true
+			this.isEdit = true
+			this.form = item
+    },
+    onDelete (item) {
+      let doc = item.username
+      let self = this
+      Swal.fire({
+        title: 'Apakah anda yakin ?',
+        text: "Ini tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Hapus'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          db.collection('users').doc(doc).delete().then(function() {
+            Swal.fire(
+              'Terhapus',
+              'Berhasil Menghapus Data.',
+              'success'
+            )
+            self.getData()
+          }).catch(function(error) {
+            Swal.fire(
+              'Gagal!',
+              'Terjadi Kesalahan',
+              'error'
+            )
+          })
+        }
+      })
+		},
     async getData () {
       this.$parent.isLoading = true
       const data = []
@@ -138,13 +193,13 @@ export default {
       this.$parent.isLoading = false
     },
     async save () {
-      let self = this
+      const self = this
       db.collection('users').doc(this.form.username).set({
         fullname: this.form.fullname,
         username: this.form.username,
-				password: '123qwe',
-				nis: this.form.nis,
-				kelas: this.form.kelas,
+        password: '123qwe',
+        nis: this.form.nis,
+        kelas: this.form.kelas,
         role: 'murid'
       })
         .then(function () {
