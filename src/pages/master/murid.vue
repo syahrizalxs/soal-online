@@ -119,12 +119,9 @@ export default {
 			muridList: [],
 			isEdit: false,
       optionKelas: [
-        { value: '1', text: 'Kelas 1' },
-        { value: '2', text: 'Kelas 2' },
-        { value: '3', text: 'Kelas 3' },
-        { value: '4', text: 'Kelas 4' },
-        { value: '5', text: 'Kelas 5' },
-        { value: '6', text: 'Kelas 6' }
+        { value: '9.A', text: 'Kelas 9 A' },
+        { value: '9.B', text: 'Kelas 9 B' },
+        { value: '9.C', text: 'Kelas 9 C' }
       ]
     }
   },

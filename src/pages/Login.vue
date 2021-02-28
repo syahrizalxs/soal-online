@@ -122,7 +122,9 @@ export default {
       const self = this
       var docRef = await db.collection('users').doc(this.username)
       docRef.get().then(function (doc) {
+        console.log(doc)
         if (doc.exists) {
+          console.log(doc.data())
           if (doc.data().password === self.password) {
             const userInfo = doc.data()
             localStorage.setItem('userInfo', JSON.stringify(userInfo))
