@@ -9,6 +9,7 @@ const Profile = () => import(/* webpackChunkName: "Profile" */'../pages/Profile'
 const MasterMataPelajaran = () => import(/* webpackChunkName: "MasterMapel" */'../pages/master/mata-pelajaran')
 const MasterMurid = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/murid')
 const MasterGuru = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/guru')
+const MasterSoal = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/master-soal')
 
 const KelasSaya = () => import(/* webpackChunkName: "KelasSaya" */'../pages/guru/kelas/kelas-saya')
 const KelasSayaAdd = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pages/guru/kelas/kelas-saya-add')
@@ -17,6 +18,7 @@ const KelasSayaEdit = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pag
 const Materi = () => import(/* webpackChunkName: "Materi" */'../pages/Materi')
 const Soal = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal.vue')
 const SoalAdd = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-add.vue')
+const SoalEdit = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-edit.vue')
 
 Vue.use(VueRouter)
 
@@ -25,7 +27,7 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      redirect: '/mata-pelajaran',
+      redirect: '/guru/soal',
       component: DefaultContainer,
       children: [
         {
@@ -69,6 +71,11 @@ const router = new VueRouter({
           component: MasterGuru
         },
         {
+          path: 'master-soal',
+          name: 'Master Soal',
+          component: MasterSoal
+        },
+        {
           path: 'materi/:id',
           name: 'Materi',
           component: Materi
@@ -82,6 +89,11 @@ const router = new VueRouter({
           path: 'guru/soal/add',
           name: 'soal-add',
           component: SoalAdd
+        },
+        {
+          path: 'guru/soal/edit/:id',
+          name: 'soal-add',
+          component: SoalEdit
         }
       ]
     },

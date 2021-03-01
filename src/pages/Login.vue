@@ -131,7 +131,7 @@ export default {
             if (userInfo.role.toString() === 'admin') {
               self.$router.replace('/master-mata-pelajaran')
             } else if (userInfo.role.toString() === 'guru') {
-              self.$router.replace('/guru/kelas-saya')
+              self.$router.replace('/guru/soal')
             } else {
               self.$router.replace('/mata-pelajaran')
             }

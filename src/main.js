@@ -11,6 +11,13 @@ import Loading from '../src/components/Loading'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+ 
+Vue.filter('convertDay', function (value) {
+  if (!value) return ''
+  value = new Date(value)
+  console.log(value)
+  return value.toLocaleString('id-ID')
+})
 
 Vue.config.productionTip = false
 

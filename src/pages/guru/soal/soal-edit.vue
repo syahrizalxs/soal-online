@@ -25,16 +25,14 @@
       </div>
       <div class="col-6">
         <b-form-group label="Tipe Soal">
-          <b-form-select v-model="parentSoal.tipeSoal">
-            <option value="ganjil">Ganjil</option>
-            <option value="genap">Genap</option>
+          <b-form-select v-model="parentSoal.tipeSoal" :options="optionsTipe">
           </b-form-select>
         </b-form-group>
       </div>
     </div>
     <div class="row">
       <div class="col-12" align="right">
-        <b-button variant="success" @click="openModal()">Tambah Soal</b-button>
+        <b-button variant="outline-success" @click="openModal()">Tambah Soal</b-button>
       </div>
     </div>
 
@@ -130,7 +128,7 @@ export default {
       parentSoal: {
         namaMataPelajaran: '',
         kodeMataPelajaran: '',
-        tipeSoal: 'ganjil',
+        tipeSoal: '',
         waktuMulai: '',
         waktuSelesai: '',
         listSoal: []
@@ -157,6 +155,10 @@ export default {
           }
         ]
       },
+      optionsTipe: [
+        { value: 'ganjil', text: 'Ganjil' },
+        { value: 'genap', text: 'Genap' }
+      ],
       modalShow: false,
       options: [
         { value: 'A', text: 'A' },
@@ -169,6 +171,7 @@ export default {
   created () {
     this.getUserInfo()
     this.getDetailProfile()
+    this.getDetailSoal()
   },
   methods: {
     addSoal () {
@@ -219,6 +222,17 @@ export default {
       this.isGuru = this.userInfo.role === 'guru'
     },
 
+    async getDetailSoal () {
+      this.$parent.isLoading = true
+      await db.collection('master-soal')
+        .doc(this.$route.params.id)
+        .get()
+        .then(res => {
+          this.parentSoal = res.data()
+        })
+      this.$parent.isLoading = false
+    },
+
     async getDetailProfile () {
       this.$parent.isLoading = true
       await db.collection('users')
@@ -227,8 +241,6 @@ export default {
         .then(res => {
           this.userInfo = res.data()
         })
-      this.parentSoal.kodeMataPelajaran = this.userInfo.kodeMataPelajaran
-      this.parentSoal.namaMataPelajaran = this.userInfo.namaMataPelajaran
       this.$parent.isLoading = false
     },
 

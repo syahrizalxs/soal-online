@@ -5,7 +5,7 @@
 				<h4>Soal</h4>
 			</div>
 			<div class="col-8" align="right">
-				<b-button variant="outline-info" @click="$router.push('/guru/soal/add')">+ Tambah Soal</b-button>
+				<b-button variant="outline-info" v-if="listSoal < 2" @click="$router.push('/guru/soal/add')">+ Tambah Soal</b-button>
 			</div>
 		</div>
 		<hr>
@@ -14,18 +14,32 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-12 mb-2" v-for="(item, index) in filtered" :key="index">
-				<b-card :title=" 'Pertemuan - ' + item.pertemuanKe" :sub-title="item.namaMataPelajaran">
+			<div class="col-12 mb-2" v-for="(item, index) in listSoal" :key="index">
+				<b-card :title="item.namaMataPelajaran" :sub-title="item.tipeSoal === 'ganjil' ? 'Ganjil' : 'Genap'" sub-title-text-variant="warning">
 					<div class="row">
-						<div class="col-6" align="left">
-							<b-card-text>Nama Materi: {{item.judulMateri}}</b-card-text>
+						<div class="col-4">
+							<b-card bg-variant="primary" text-variant="white">
+                <h3 class="text-center">Waktu Mulai</h3>
+                <b-card-text class="text-center"><b-icon icon="clock"></b-icon> {{ item.waktuMulai || 'Belum di Set' }}</b-card-text>
+              </b-card>
 						</div>
-						<div class="col-6" align="right">
-							<b-button variant="info" @click="onEdit(item)">
-                <b-icon icon="pencil"></b-icon>
-              </b-button>
-							<b-button variant="danger" class="ml-2" @click="onDelete(item)">
-                <b-icon icon="trash"></b-icon>
+						<div class="col-4">
+							<b-card bg-variant="success" text-variant="white">
+                <h3 class="text-center">Waktu Selesai</h3>
+                <b-card-text class="text-center"><b-icon icon="clock"></b-icon> {{ item.selesai || 'Belum di Set' }}</b-card-text>
+              </b-card>
+						</div>
+						<div class="col-4">
+							<b-card bg-variant="dark" text-variant="white">
+                <h3 class="text-center">Jumlah Soal</h3>
+                <b-card-text class="text-center"><b-icon icon="book"></b-icon> {{ item.listSoal.length }}</b-card-text>
+              </b-card>
+						</div>
+          </div>
+          <div class="row mt-3">
+						<div class="col-12" align="right">
+							<b-button variant="info" size="sm" @click="onEdit(item)">
+                <b-icon icon="pencil"></b-icon> Edit
               </b-button>
 						</div>
 					</div>
@@ -49,14 +63,11 @@ export default {
       mataPelajaranList: [],
       userInfo: {},
       selectedMataPelajaran: '',
-      optionsMataPelajaran: []
+      optionsMataPelajaran: [],
+      listSoal: []
     }
   },
-  computed: {
-    filtered () {
-      return this.mataPelajaranList.filter(item => item.namaMataPelajaran === this.selectedMataPelajaran)
-    }
-  },
+  computed: {},
   created () {
     this.getData()
     // this.$store.commit('changeName', 'Ariz')
@@ -64,7 +75,7 @@ export default {
   },
   methods: {
     onEdit (params) {
-      this.$router.push('kelas-saya/' + params.id)
+      this.$router.push('soal/edit/' + params.id)
     },
     onDelete (params) {
       const doc = params.id
@@ -96,26 +107,6 @@ export default {
         }
       })
     },
-    async onInputVideo (evt) {
-      this.$parent.isLoading = true
-      const self = this
-      const file = document.getElementById('video').files[0]
-      const ref = `video/${file.name}`
-      const storageRef = firebase.storage().ref(ref)
-      // put request upload file to firebase storage
-      await storageRef.put(file).then(async function (snapshot) {
-        const resUrl = await firebase.storage().ref(ref).getDownloadURL()
-        console.log({ resUrl })
-        if (resUrl) {
-          self.form.videoUrl = resUrl
-        }
-      })
-        .catch(e => {
-          console.log(e)
-          Swal.fire('Error', 'Terjadi Kesalahan saat upload foto!', 'error')
-        })
-      this.$parent.isLoading = false
-    },
     async getData () {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       await db.collection('users')
@@ -126,25 +117,20 @@ export default {
         })
       this.$parent.isLoading = true
       const data = []
-      await db.collection('materi')
-        .orderBy('pertemuanKe', 'asc')
-        .where('nip', '==', this.userInfo.nip)
+      await db.collection('master-soal')
+        .where('kodeMataPelajaran', '==', this.userInfo.kodeMataPelajaran)
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            data.push(doc.data())
-            data.forEach(item => item.id = doc.id)
+            const result = doc.data()
+            result.id = doc.id
+            data.push(result)
           })
         })
         .catch(function (error) {
           console.log('Error getting documents: ', error)
         })
-      this.mataPelajaranList = data
-      const list = this.mataPelajaranList.map(item => {
-        return item.namaMataPelajaran
-      })
-      this.optionsMataPelajaran = [...new Set(list)]
-      this.selectedMataPelajaran = this.optionsMataPelajaran[0]
+      this.listSoal = data
       this.$parent.isLoading = false
     },
     async save () {
