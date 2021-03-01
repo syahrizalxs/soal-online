@@ -123,11 +123,11 @@ export default {
       this.form.namaMataPelajaran = item.namaMataPelajaran
     },
     onDelete (item) {
-      let doc = item.kodeMataPelajaran
-      let self = this
+      const doc = item.kodeMataPelajaran
+      const self = this
       Swal.fire({
         title: 'Apakah anda yakin ?',
-        text: "Ini tidak dapat dikembalikan!",
+        text: 'Ini tidak dapat dikembalikan!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -135,14 +135,14 @@ export default {
         confirmButtonText: 'Hapus'
       }).then((result) => {
         if (result.isConfirmed) {
-          db.collection('matapelajaran').doc(doc).delete().then(function() {
+          db.collection('matapelajaran').doc(doc).delete().then(function () {
             Swal.fire(
               'Terhapus',
               'Berhasil Menghapus Data.',
               'success'
             )
             self.getData()
-          }).catch(function(error) {
+          }).catch(function (error) {
             Swal.fire(
               'Gagal!',
               'Terjadi Kesalahan',
@@ -151,7 +151,7 @@ export default {
           })
         }
       })
-		},
+    },
     async getData () {
       this.$parent.isLoading = true
       const data = []

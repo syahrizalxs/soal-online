@@ -201,13 +201,13 @@
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-6">
+                <!-- <div class="col-6">
                   <label for="inputState">Mengajar Kelas</label>
                     <select id="inputState" v-model="userInfo.kelas" class="form-control">
                       <option disabled selected>Pilih Kelas</option>
                       <option v-for="(item, index) in optionsKelas" :key="index" :value="item">{{item}}</option>
                     </select>
-                </div>
+                </div> -->
                 <div class="col-6">
                   <label>Mengajar Mata Pelajaran</label>
                     <select v-model="selectedMataPelajaran" @change="changeMataPelajaran" class="form-control">
@@ -283,6 +283,8 @@ export default {
         .then(res => {
           this.userInfo = res.data()
         })
+      this.selectedMataPelajaran.kodeMataPelajaran = this.userInfo.kodeMataPelajaran
+      this.selectedMataPelajaran.namaMataPelajaran = this.userInfo.namaMataPelajaran
       this.$parent.isLoading = false
     },
     async getListMataPelajaran () {

@@ -15,6 +15,8 @@ const KelasSayaAdd = () => import(/* webpackChunkName: "KelasSayaAdd" */'../page
 const KelasSayaEdit = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pages/guru/kelas/kelas-saya-edit')
 
 const Materi = () => import(/* webpackChunkName: "Materi" */'../pages/Materi')
+const Soal = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal.vue')
+const SoalAdd = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-add.vue')
 
 Vue.use(VueRouter)
 
@@ -70,6 +72,16 @@ const router = new VueRouter({
           path: 'materi/:id',
           name: 'Materi',
           component: Materi
+        },
+        {
+          path: 'guru/soal',
+          name: 'soal',
+          component: Soal
+        },
+        {
+          path: 'guru/soal/add',
+          name: 'soal-add',
+          component: SoalAdd
         }
       ]
     },

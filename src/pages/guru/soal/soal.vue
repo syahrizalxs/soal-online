@@ -2,26 +2,12 @@
 	<div class="mata-pelajaran">
 		<div class="row">
 			<div class="col-4">
-				<h4>Materi Saya</h4>
+				<h4>Soal</h4>
 			</div>
 			<div class="col-8" align="right">
-				<b-button variant="outline-info" @click="$router.push('/guru/kelas-saya/add')">+ Tambah Materi</b-button>
+				<b-button variant="outline-info" @click="$router.push('/guru/soal/add')">+ Tambah Soal</b-button>
 			</div>
 		</div>
-    <div class="row">
-      <div class="col">
-        <b-form-group
-						id="input-group-5"
-						label="Filter"
-						label-for="input-5"
-					>
-						<select v-model="selectedMataPelajaran" class="form-control">
-							<option disabled selected>Pilih Mata Pelajaran</option>
-							<option v-for="(item, index) in optionsMataPelajaran" :key="index" :value="item">{{item}}</option>
-						</select>
-					</b-form-group>
-      </div>
-    </div>
 		<hr>
 		<div class="row">
 			<div class="col-12">

@@ -116,8 +116,8 @@ export default {
         nis: ''
       },
       modalShow: false,
-			muridList: [],
-			isEdit: false,
+      muridList: [],
+      isEdit: false,
       optionKelas: [
         { value: '9.A', text: 'Kelas 9 A' },
         { value: '9.B', text: 'Kelas 9 B' },
@@ -127,27 +127,27 @@ export default {
   },
   created () {
     this.getData()
-	},
-	watch: {
-		modalShow () {
-			if (!this.modalShow) {
-				this.form = {}
-				this.isEdit = false
-			}
-		}
-	},
+  },
+  watch: {
+    modalShow () {
+      if (!this.modalShow) {
+        this.form = {}
+        this.isEdit = false
+      }
+    }
+  },
   methods: {
-		onEdit (item) {
+    onEdit (item) {
       this.modalShow = true
-			this.isEdit = true
-			this.form = item
+      this.isEdit = true
+      this.form = item
     },
     onDelete (item) {
-      let doc = item.username
-      let self = this
+      const doc = item.username
+      const self = this
       Swal.fire({
         title: 'Apakah anda yakin ?',
-        text: "Ini tidak dapat dikembalikan!",
+        text: 'Ini tidak dapat dikembalikan!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -155,14 +155,14 @@ export default {
         confirmButtonText: 'Hapus'
       }).then((result) => {
         if (result.isConfirmed) {
-          db.collection('users').doc(doc).delete().then(function() {
+          db.collection('users').doc(doc).delete().then(function () {
             Swal.fire(
               'Terhapus',
               'Berhasil Menghapus Data.',
               'success'
             )
             self.getData()
-          }).catch(function(error) {
+          }).catch(function (error) {
             Swal.fire(
               'Gagal!',
               'Terjadi Kesalahan',
@@ -171,7 +171,7 @@ export default {
           })
         }
       })
-		},
+    },
     async getData () {
       this.$parent.isLoading = true
       const data = []
