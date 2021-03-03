@@ -118,7 +118,6 @@ export default {
       this.$parent.isLoading = true
       const data = []
       await db.collection('master-soal')
-        .where('kodeMataPelajaran', '==', this.userInfo.kodeMataPelajaran)
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {

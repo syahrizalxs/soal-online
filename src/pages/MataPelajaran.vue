@@ -4,23 +4,23 @@
       <h3 class="text-left">Mata Pelajaran Saya</h3>
     </div>
     <div class="content mt-2">
-      <b-row>
-        <div class="col-3">
-          <label for="Pilih Mata Pelajaran">
-            Pilih Mata Pelajaran
-          </label>
-          <b-form-select v-model="selected" :options="mataPelajaranList"></b-form-select>
-        </div>
-      </b-row>
       <b-row class="mt-2" v-if="materiList.length > 0">
         <div class="col-12 mt-2" v-for="(item, index) in materiList" :key="index">
-          <b-card :title=" 'Pertemuan - ' + item.data.pertemuanKe" :sub-title="item.data.namaMataPelajaran">
+          <b-card :title=" 'Soal - ' + item.data.tipeSoal" :sub-title="item.data.namaMataPelajaran">
             <div class="row">
               <div class="col-6" align="left">
-                <b-card-text>Nama Materi: {{item.data.judulMateri}}</b-card-text>
+                <b-card-text>Jumlah Soal: <span style="font-weight: bold;">{{item.data.listSoal.length}}</span></b-card-text>
+                <!-- <b-card-text>Jumlah Soal: {{item.data.waktuMulai | converDate }}</b-card-text> -->
               </div>
-              <div class="col-6" align="right">
-                <b-button variant="info" @click="onDetail(item)">Lihat Materi</b-button>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                Soal akan dibuka pada: <span style="font-weight: bold;">{{ item.data.waktuMulai | converDate }}</span> 
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12" align="right">
+                <b-button variant="info" @click="onDetail(item)">Kerjakan Soal</b-button>
               </div>
             </div>
 				  </b-card>
@@ -34,16 +34,22 @@
 </template>
 
 <script>
-import Card from '../components/Card'
+// import Card from '../components/Card'
 import firebase from '../config/firebase'
+import { converDate, duration } from '../common/helper/time'
 
 const db = firebase.firestore()
 export default {
   components: {
-    Card
+    // Card
+  },
+  filters: {
+    converDate,
+    duration
   },
   data () {
     return {
+      timeNow: new Date(),
       selected: '',
       userInfo: {},
       mataPelajaranList: [],
@@ -78,7 +84,7 @@ export default {
     },
     async getMataPelajaran () {
       const data = []
-      await db.collection('matapelajaran')
+      await db.collection('master-soal')
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
@@ -96,23 +102,15 @@ export default {
       })
     },
     async getMataPelajaranList () {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      await db.collection('users')
-        .doc(userInfo.username)
-        .get()
-        .then(res => {
-          this.userInfo = res.data()
-        })
       this.$parent.isLoading = true
       const data = []
-      await db.collection('materi')
-        .where('kelas', '==', this.userInfo.kelas)
-        .orderBy('pertemuanKe', 'asc')
-        .where('kodeMataPelajaran', '==', this.selected)
+      await db.collection('master-soal')
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            data.push({ data: doc.data(), doc: doc.id })
+            if (doc.data().waktuMulai !== '') {
+              data.push({ data: doc.data(), doc: doc.id })
+            }
           })
         })
         .catch(function (error) {
@@ -122,7 +120,7 @@ export default {
       this.$parent.isLoading = false
     },
     onDetail (data) {
-      this.$router.push('materi/' + data.doc)
+      this.$router.push('soal/' + data.doc)
     }
   },
   watch: {

@@ -15,7 +15,7 @@ const KelasSaya = () => import(/* webpackChunkName: "KelasSaya" */'../pages/guru
 const KelasSayaAdd = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pages/guru/kelas/kelas-saya-add')
 const KelasSayaEdit = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pages/guru/kelas/kelas-saya-edit')
 
-const Materi = () => import(/* webpackChunkName: "Materi" */'../pages/Materi')
+const KerjakanSoal = () => import(/* webpackChunkName: "Materi" */'../pages/KerjakanSoal.vue')
 const Soal = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal.vue')
 const SoalAdd = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-add.vue')
 const SoalEdit = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-edit.vue')
@@ -33,7 +33,10 @@ const router = new VueRouter({
         {
           path: '/mata-pelajaran',
           name: 'MataPelajaran',
-          component: MataPelajaran
+          component: MataPelajaran,
+          meta: {
+            authorize: 'murid'
+          }
         },
         {
           path: '/profile/:id',
@@ -76,14 +79,17 @@ const router = new VueRouter({
           component: MasterSoal
         },
         {
-          path: 'materi/:id',
-          name: 'Materi',
-          component: Materi
+          path: 'soal/:id',
+          name: 'soal',
+          component: KerjakanSoal
         },
         {
           path: 'guru/soal',
           name: 'soal',
-          component: Soal
+          component: Soal,
+          meta: {
+            authorize: 'guru'
+          }
         },
         {
           path: 'guru/soal/add',
@@ -108,18 +114,28 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log({ next, to, from })
   const token = JSON.parse(localStorage.getItem('userInfo'))
   const isLoggedin = !!token
+
+  const { authorize } = to.meta
   const isPublic = to.matched.some(record => record.meta.public)
   if (!isPublic && !isLoggedin) {
     return next({
       path: '/login',
       query: { redirect: to.fullPath }
     })
-  } else {
-    next()
-  }
+  } else if (authorize) {
+      if (authorize === token.role) {
+        return next()
+      } else {
+        return next({
+          path: '/profile/' + token.username,
+        })
+      }
+    }
+    else {
+      next()
+    }
 })
 
 export default router
