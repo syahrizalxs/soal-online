@@ -25,7 +25,7 @@
       </div>
       <div class="col-6">
         <b-form-group label="Tipe Soal">
-          <b-form-select v-model="parentSoal.tipeSoal" :options="optionsTipe">
+          <b-form-select disabled v-model="parentSoal.tipeSoal" :options="optionsTipe">
           </b-form-select>
         </b-form-group>
       </div>
@@ -51,8 +51,8 @@
                <span style="font-weight: 600;">{{ index + 1 }}. </span><span style="font-weight: 500;" class="text-muted">{{ item.soal }}</span>
               </div>
               <div class="col-2" align="right">
-                <b-button class="button m-2" size="sm" variant="outline-primary"><b-icon icon="pencil"></b-icon></b-button>
-                <b-button class="button" size="sm" variant="danger"><b-icon icon="trash"></b-icon></b-button>
+                <!-- <b-button class="button m-2" size="sm" variant="outline-primary" @cl><b-icon icon="pencil"></b-icon></b-button> -->
+                <b-button class="button" size="sm" variant="danger" @click="parentSoal.listSoal.splice(index,1)"><b-icon icon="trash"></b-icon></b-button>
               </div>
             </div>
           </b-card-text>
@@ -247,7 +247,7 @@ export default {
     async save () {
       const self = this
       db.collection('materi')
-        .add(self.form)
+        .add(self.parentSoal)
         .then(function () {
           Swal.fire('Succesfully', 'Berhasil!', 'success')
           self.$router.go(-1)
@@ -260,8 +260,10 @@ export default {
     async simpanSoal () {
       const self = this
       db.collection('master-soal')
-        .add(self.parentSoal)
-        .then(function () {
+        .doc(this.$route.params.id)
+        .update(self.parentSoal)
+        .then(function (res) {
+          console.log({ res })
           Swal.fire('Succesfully', 'Berhasil!', 'success')
           self.$router.go(-1)
         })

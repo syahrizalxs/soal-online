@@ -26,7 +26,7 @@
 						<div class="col-4">
 							<b-card bg-variant="success" text-variant="white">
                 <h3 class="text-center">Waktu Selesai</h3>
-                <b-card-text class="text-center"><b-icon icon="clock"></b-icon> {{ item.selesai || 'Belum di Set' }}</b-card-text>
+                <b-card-text class="text-center"><b-icon icon="clock"></b-icon> {{ item.waktuSelesai || 'Belum di Set' }}</b-card-text>
               </b-card>
 						</div>
 						<div class="col-4">

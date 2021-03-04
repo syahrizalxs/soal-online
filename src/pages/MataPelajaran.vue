@@ -20,6 +20,7 @@
             </div>
             <div class="row">
               <div class="col-12" align="right">
+                <!-- :disabled="timeNow < getJsDate(item.data.waktuMulai) || timeNow > getJsDate(item.data.waktuSelesai)" -->
                 <b-button variant="info" @click="onDetail(item)">Kerjakan Soal</b-button>
               </div>
             </div>
@@ -53,6 +54,7 @@ export default {
       selected: '',
       userInfo: {},
       mataPelajaranList: [],
+      interval: null,
       materiList: [],
       classList: [
         { name: 'Matematika', teacher: 'Bangbang S.kom', materi: 20, soal: 6 },
@@ -64,6 +66,9 @@ export default {
       ]
     }
   },
+  beforeDestroy () {
+    clearInterval(this.interval)
+  },
   async created () {
     this.$parent.isLoading = true
     await this.getUserInfo()
@@ -71,6 +76,9 @@ export default {
     this.selected = this.mataPelajaranList[0].value
     this.getMataPelajaranList()
     this.$parent.isLoading = false
+    this.interval = setInterval(() => {
+      this.timeNow = new Date()
+    }, 1000)
   },
   methods: {
     async getUserInfo () {
@@ -100,6 +108,10 @@ export default {
           text: item.namaMataPelajaran
         }
       })
+    },
+
+    getJsDate (date) {
+      return new Date(date)
     },
     async getMataPelajaranList () {
       this.$parent.isLoading = true

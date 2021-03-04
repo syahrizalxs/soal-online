@@ -24,7 +24,7 @@ export default {
 	width: 100%;
   min-height: 100vh;
 	background-color: rgba($color: #000000, $alpha: 0.7);
-  z-index: 3;
+  z-index: 999;
 }
 .loading {
   display: flex;
