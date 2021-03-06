@@ -185,6 +185,22 @@ export default {
         .catch(function (error) {
           console.error('Error writing document: ', error)
         })
+      for (let i = 0; i < 2; i++) {
+        db.collection('master-soal')
+          .doc()
+          .set({
+            kodeMataPelajaran: this.form.kodeMataPelajaran,
+            namaMataPelajaran: this.form.namaMataPelajaran,
+            listSoal: [],
+            tipeSoal: i === 0 ? 'genap' : 'ganjil',
+            waktuMulai: '',
+            waktuSelesai: ''
+          })
+          .then(function () {})
+          .catch(function (error) {
+            console.error('Error writing document: ', error)
+          })
+      }
     }
   }
 }

@@ -6,35 +6,57 @@
           Soal {{soal.namaMataPelajaran}}
         </div>
         <div class="tipe-soal">
-          Ganjil
+          {{soal.tipeSoal.toUpperCase()}}
         </div>
       </div>
     </div>
-    <div class="row" v-for="(item, index) in soalFilterd" :key="index">
+    <div class="row mb-5" v-for="(item, index) in soalFiltered" :key="index">
       <div class="col-12 my-2">
-        <b-card>
-          <b-card-text>
-            <span class="text-muted" style="font-weight: bold;">{{ currentPage }}.</span> {{item.soal}}
-          </b-card-text>
-          <b-form-group>
-            <b-form-radio-group stacked v-model="item.userResponse" name="radio-answer">
-              <b-form-radio v-for="data in item.pilihan" :key="data.key" :value="data.key">{{data.key}}. {{data.value}}</b-form-radio>
-            </b-form-radio-group>
-          </b-form-group>
+        <b-card class="flex">
+          <span class="no-soal">{{index + 1}}.</span>
+          <div class="soal-container">
+            <div>
+              <span class="soal-body" v-html="item.soal"></span>
+            </div>
+          </div>
         </b-card>
+        <div class="row">
+          <div v-for="data in item.pilihan" :key="data.key" class="col-6">
+            <div class="mt-2" style="cursor: pointer;">
+              <b-card @click="onAnswer(data.key, index)" class="answer-box " :class="[item.userResponse === data.key ? 'active-answer' : '']">
+                <b-card-text>
+                  <div class="row">
+                    <div style="font-weight: 500;" class="col-2">
+                      {{data.key}}.
+                    </div>
+                    <div class="col-10" style="margin-left: -50px; min-height: 80px;">
+                      {{data.value}}
+                    </div>
+                  </div>
+                </b-card-text>
+              </b-card>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <hr>
     <div class="row">
       <div class="col-6">
-        Terjawab {{terjawab.length}}/{{soal.listSoal.length}}
+        Terjawab {{terjawab}}/{{soal.listSoal.length}}
+      </div>
+      <div class="col-6" align="right">
+        <b-button variant="primary" @click="onSelesaiSoal">SELESAI & KIRIM</b-button> <br>
+        <small class="text-danger">*Harap isi semua soal sebelum mengirim hasil pengerjaan</small>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
        <b-pagination
         class="mx-auto"
+        limit="5"
         pills
-        :total-rows="totalRows" 
+        :total-rows="totalRows"
         v-model="currentPage"
         :per-page="perPage"
         align="center"
@@ -45,35 +67,45 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import firebase from '../config/firebase'
 const db = firebase.firestore()
 
 export default {
   name: 'soal',
-  data: () =>  {
+  data: () => {
     return {
-      userResponse: [],
       soal: {
-        listSoal: []
+        listSoal: [
+          {
+            userResponse: ''
+          }
+        ]
       },
       selected: '',
       currentPage: 1,
-      perPage: 1
+      perPage: 10,
+      terjawab: 0,
+      userInfo: {}
     }
   },
   created () {
     this.getSoal()
+    this.getUserInfo()
+  },
+  watch: {
+    currentPage: {
+      immediate: true,
+      handler: () => {
+        // this.terjawab()
+      }
+    }
   },
   computed: {
-    terjawab () {
-      return this.soal.listSoal.filter(item => {
-        return item.userResponse === ''
-      })
-    },
     totalRows () {
       return this.soal.listSoal.length
     },
-    soalFilterd () {
+    soalFiltered () {
       const items = this.soal.listSoal
       // Return just page of items needed
       return items.slice(
@@ -81,9 +113,18 @@ export default {
         this.currentPage * this.perPage
       )
     }
-    
+
   },
   methods: {
+    async getUserInfo () {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      await db.collection('users')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+        })
+    },
     async getSoal () {
       // console.log(this.$parent)
       this.$parent.isLoading = true
@@ -95,12 +136,67 @@ export default {
         })
       this.$parent.isLoading = false
       this.soal.listSoal.forEach(item => item.userResponse = '')
+    },
+    onAnswer (value, index) {
+      this.soal.listSoal[index + 1 + ((this.currentPage - 1) * this.perPage) - 1].userResponse = value
+      this.terjawab = this.soal.listSoal.filter(item => item.userResponse !== '').length
+      this.$forceUpdate()
+    },
+    onSelesaiSoal () {
+      if (this.terjawab !== this.soal.listSoal.length) {
+        return Swal.fire('Perhatian', 'Soal harus terjawab semua', 'error')
+      }
+      const correctAnswer = this.soal.listSoal.filter(item => item.kunciJawaban === item.userResponse).length
+      const nilai = correctAnswer / this.soal.listSoal.length * (1 * 100)
+
+      const params = Object.assign({
+        nilai,
+        jawabanBenar: correctAnswer,
+        tanggalPengerjaan: new Date(),
+        jumlahSoal: this.soal.listSoal.length,
+        kodeMataPelajaran: this.soal.kodeMataPelajaran,
+        namaMataPelajaran: this.soal.namaMataPelajaran
+      })
+
+      const self = this
+      db.collection('report')
+        .doc(this.userInfo.username)
+        .set({
+          username: this.userInfo.username,
+          nama: this.userInfo.fullname,
+          nis: this.userInfo.nis,
+          kelas: this.userInfo.kelas,
+          listReport: [params]
+        })
+        .then(function () {
+          Swal.fire('Succesfully', 'Berhasil!', 'success')
+          self.$router.go(-1)
+          // self.modalShow = false
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.answer-box {
+  width: 100%;
+   &:hover {
+     background-color: #00b4d8;
+     transition: ease-in-out .3s;
+     color: white;
+   }
+}
+
+.active-answer {
+  background-color: #0096c7;
+  color: white;
+}
+
 .kerjakan-soal {
   margin: 1rem;
   padding: 1rem;

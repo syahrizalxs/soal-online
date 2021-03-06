@@ -81,16 +81,6 @@
 							placeholder="NIP"
 						></b-form-input>
 					</b-form-group>
-          <b-form-group
-						id="input-group-4"
-						label="Mengajar Kelas"
-						label-for="input-4"
-					>
-						<select id="inputState" v-model="form.kelas" class="form-control">
-							<option disabled selected>Pilih Kelas</option>
-							<option v-for="(item, index) in optionsKelas" :key="index" :value="item">{{item}}</option>
-						</select>
-					</b-form-group>
           <!-- <b-form-group
 						id="input-group-5"
 						label="Mengajar Mata Pelajaran"
@@ -128,7 +118,6 @@ export default {
         namaMataPelajaran: '',
         kodeMataPelajaran: ''
       },
-      optionsKelas: ['1', '2', '3', '4', '5', '6'],
       optionsMataPelajaran: [],
       modalShow: false,
       isEdit: false,

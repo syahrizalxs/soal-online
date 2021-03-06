@@ -42,33 +42,34 @@
       </div>
     </div>
 
-    <div class="row mt-3">
-      <div class="col-12" v-for="(item, index) in parentSoal.listSoal" :key="index">
-         <b-card class="mt-2">
-          <b-card-text>
-            <div class="row">
-              <div class="col-10">
-               <span style="font-weight: 600;">{{ index + 1 }}. </span><span style="font-weight: 500;" class="text-muted">{{ item.soal }}</span>
-              </div>
-              <div class="col-2" align="right">
-                <!-- <b-button class="button m-2" size="sm" variant="outline-primary" @cl><b-icon icon="pencil"></b-icon></b-button> -->
-                <b-button class="button" size="sm" variant="danger" @click="parentSoal.listSoal.splice(index,1)"><b-icon icon="trash"></b-icon></b-button>
-              </div>
-            </div>
-          </b-card-text>
-
+    <div class="row mt-3" v-for="(item, index) in parentSoal.listSoal" :key="index">
+      <div class="col-12">
+        <b-card class="flex">
+         <span class="no-soal">{{index + 1}}.</span>
+         <div class="soal-container">
+          <div>
+            <span class="soal-body" v-html="item.soal"></span>
+          </div>
+         </div>
+        <b-button class="button" size="sm" variant="danger" @click="parentSoal.listSoal.splice(index,1)"><b-icon icon="trash"></b-icon></b-button>
+        </b-card>
+      </div>
+      <div class="col-12 mt-2 mb-3">
+        <b-card>
           <b-card-text>
             <div class="row">
               <div v-for="answer in item.pilihan" :key="answer.key" class="col-6">
-                {{ answer.key.toUpperCase() }}. {{ answer.value }}
+                {{ answer.key.toUpperCase() }} . {{ answer.value }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 mt-2">
+                <span style="font-weight: 500">Kunci Jawaban: {{item.kunciJawaban}}</span>
               </div>
             </div>
           </b-card-text>
-
-          <b-card-text>
-            <div>Jawaban Benar Adalah : <span class="text-success"> {{ item.kunciJawaban }}</span></div>
-          </b-card-text>
         </b-card>
+        <hr>
       </div>
     </div>
 
@@ -79,18 +80,19 @@
       </div>
     </div>
 
-    <b-modal ref="modal-1" id="modal-1" size="lg" no-close-on-esc no-close-on-backdrop ok-title="Tambah" @ok="onAddSoal" title="Tambah Soal">
+    <b-modal ref="modal-1" id="modal-1" size="xl" no-close-on-esc no-close-on-backdrop ok-title="Tambah" @ok="onAddSoal" title="Tambah Soal">
       <div class="row">
         <div class="col-12">
           <b-form>
             <b-form-group label="Soal">
-              <b-form-textarea
+              <ckeditor :editor="editor" @input="onInputCk" v-model="form.soal" :config="editorConfig"></ckeditor>
+              <!-- <b-form-textarea
                 id="input-3"
                 v-model="form.soal"
                 rows="4"
                 required
                 placeholder="Tulis Soal Anda disini..."
-              ></b-form-textarea>
+              ></b-form-textarea> -->
             </b-form-group>
 
             <div v-for="item in form.pilihan" :key="item.key">
@@ -119,6 +121,7 @@
 <script>
 import firebase from '../../../config/firebase'
 import Swal from 'sweetalert2'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 const db = firebase.firestore()
 export default {
@@ -132,6 +135,12 @@ export default {
         waktuMulai: '',
         waktuSelesai: '',
         listSoal: []
+      },
+      editor: ClassicEditor,
+      editorData: '<p>Content of the editor.</p>',
+      editorConfig: {
+        // The configuration of the editor.
+        toolbar: ['bold', 'italic']
       },
       form: {
         soal: '',
@@ -174,6 +183,9 @@ export default {
     this.getDetailSoal()
   },
   methods: {
+    onInputCk (evt) {
+      console.log(evt)
+    },
     addSoal () {
       this.listSoal.push(this.form)
       this.clear()
@@ -275,7 +287,21 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.flex {
+  display: flex;
+  // background-color: rgb(209, 209, 209);
+  border-radius: 10px;
+}
+.soal-container {
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.no-soal {
+  font-weight: 500;
+  padding: 1rem;
+}
 	.mata-pelajaran {
 		margin: 1rem;
 		padding: 20px;

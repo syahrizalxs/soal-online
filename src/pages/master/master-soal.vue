@@ -61,7 +61,7 @@
       </div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
@@ -129,7 +129,7 @@ export default {
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            let res = doc.data()
+            const res = doc.data()
             res.id = doc.id
             data.push(res)
           })

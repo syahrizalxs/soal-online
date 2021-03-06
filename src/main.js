@@ -8,10 +8,12 @@ import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import VCalendar from 'v-calendar'
 import VueTheMask from 'vue-the-mask'
 import Loading from '../src/components/Loading'
+import CKEditor from '@ckeditor/ckeditor5-vue2'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
- 
+
+Vue.use(CKEditor)
 Vue.filter('convertDay', function (value) {
   if (!value) return ''
   value = new Date(value)

@@ -15,7 +15,7 @@
             </div>
             <div class="row">
               <div class="col-12">
-                Soal akan dibuka pada: <span style="font-weight: bold;">{{ item.data.waktuMulai | converDate }}</span> 
+                Soal akan dibuka pada: <span style="font-weight: bold;">{{ item.data.waktuMulai | converDate }}</span>
               </div>
             </div>
             <div class="row">
@@ -54,6 +54,7 @@ export default {
       selected: '',
       userInfo: {},
       mataPelajaranList: [],
+      isGanjil: undefined,
       interval: null,
       materiList: [],
       classList: [
@@ -89,6 +90,8 @@ export default {
         .then(res => {
           this.userInfo = res.data()
         })
+
+      this.isGanjil = this.userInfo.nis.substr(this.userInfo.nis.length - 1) % 2 === 1
     },
     async getMataPelajaran () {
       const data = []
@@ -120,7 +123,7 @@ export default {
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            if (doc.data().waktuMulai !== '') {
+            if (doc.data().waktuMulai !== '' && doc.data().listSoal.length !== 0) {
               data.push({ data: doc.data(), doc: doc.id })
             }
           })
@@ -128,7 +131,11 @@ export default {
         .catch(function (error) {
           console.log('Error getting documents: ', error)
         })
-      this.materiList = data
+      if (this.isGanjil) {
+        this.materiList = data.filter(item => item.data.tipeSoal === 'ganjil')
+      } else {
+        this.materiList = data.filter(item => item.data.tipeSoal === 'genap')
+      }
       this.$parent.isLoading = false
     },
     onDetail (data) {

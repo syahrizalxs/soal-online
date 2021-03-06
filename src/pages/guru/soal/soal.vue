@@ -115,9 +115,13 @@ export default {
         .then(res => {
           this.userInfo = res.data()
         })
+      if (!this.userInfo.kodeMataPelajaran) {
+        Swal.fire('Perhatian', 'Anda tidak dapet mengakses halaman ini sebelum anda mengisi bidang mata pelajaran anda', 'error', this.$router.push('/profile/' + this.userInfo.username))
+      }
       this.$parent.isLoading = true
       const data = []
       await db.collection('master-soal')
+        .where('kodeMataPelajaran', '==', this.userInfo.kodeMataPelajaran)
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {

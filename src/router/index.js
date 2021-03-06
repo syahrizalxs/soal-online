@@ -125,17 +125,16 @@ router.beforeEach((to, from, next) => {
       query: { redirect: to.fullPath }
     })
   } else if (authorize) {
-      if (authorize === token.role) {
-        return next()
-      } else {
-        return next({
-          path: '/profile/' + token.username,
-        })
-      }
+    if (authorize === token.role) {
+      return next()
+    } else {
+      return next({
+        path: '/profile/' + token.username
+      })
     }
-    else {
-      next()
-    }
+  } else {
+    next()
+  }
 })
 
 export default router
