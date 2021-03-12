@@ -8,7 +8,9 @@
         <li class="list-items pointer" @click="$router.push('/master-murid')" v-if="isAdmin" :class="[$route.name === 'Master Murid' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Master Murid</span></li>
         <li class="list-items pointer" @click="$router.push('/master-guru')" v-if="isAdmin" :class="[$route.name === 'Master Guru' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="person-circle"></b-icon><span class="m-2 p-1">Master Guru</span></li>
         <li class="list-items pointer" @click="$router.push('/guru/soal')" v-if="isGuru" :class="[$route.name === 'soal' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Soal</span></li>
-        <li class="list-items pointer" v-if="isMurid" :class="[$route.name === 'MataPelajaran' ? 'active' : '']" @click="$router.push('/mata-pelajaran')" v-b-toggle.collapsible-mata-pelasjaran><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Mata Pelajaran</span></li>
+        <li class="list-items pointer" @click="$router.push('/guru/nilai-siswa')" v-if="isGuru" :class="[$route.name === 'nilai-siswa' ? 'active' : '']"><b-icon class="h2 m-2 p-1" icon="person"></b-icon><span class="m-2 p-1">Nilai Siswa</span></li>
+        <li class="list-items pointer" v-if="isMurid" :class="[$route.name === 'MataPelajaran' ? 'active' : '']" @click="$router.push('/mata-pelajaran')"><b-icon class="h2 m-2 p-1" icon="book"></b-icon><span class="m-2 p-1">Mata Pelajaran</span></li>
+        <li class="list-items pointer" v-if="isMurid" :class="[$route.name === 'rapor-siswa' ? 'active' : '']" @click="$router.push('/rapor-siswa/' + userInfo.nis)"><b-icon class="h2 m-2 p-1" icon="check"></b-icon><span class="m-2 p-1">Nilai Saya</span></li>
           <b-collapse v-for="(item, index) in array" :key="index" id="collapsible-mata-pelajaran">
             <b-list-group>
               <b-list-group-item class="pointer bg-dark ml-2">&#8226; {{item}}</b-list-group-item>

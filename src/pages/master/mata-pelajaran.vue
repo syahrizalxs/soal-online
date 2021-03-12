@@ -206,7 +206,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .mata-pelajaran {
   margin: 1rem;
   padding: 20px;

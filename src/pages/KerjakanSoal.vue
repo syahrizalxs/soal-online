@@ -82,6 +82,8 @@ export default {
           }
         ]
       },
+      isReportExist: false,
+      userReport: {},
       selected: '',
       currentPage: 1,
       perPage: 10,
@@ -89,9 +91,10 @@ export default {
       userInfo: {}
     }
   },
-  created () {
+  async created () {
     this.getSoal()
-    this.getUserInfo()
+    await this.getUserInfo()
+    this.checkReportExist()
   },
   watch: {
     currentPage: {
@@ -116,6 +119,20 @@ export default {
 
   },
   methods: {
+    async checkReportExist () {
+      await db.collection('report')
+      .doc(this.userInfo.username)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          this.isReportExist = true
+          this.userReport = doc.data()
+        }
+      }).catch((error) => {
+        erroe
+      })
+    },
+
     async getUserInfo () {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'))
       await db.collection('users')
@@ -157,6 +174,12 @@ export default {
         kodeMataPelajaran: this.soal.kodeMataPelajaran,
         namaMataPelajaran: this.soal.namaMataPelajaran
       })
+      
+      let paramForExist = this.userReport.listReport
+      
+      if (this.isReportExist) {
+        paramForExist.push(params)
+      }
 
       const self = this
       db.collection('report')
@@ -166,8 +189,8 @@ export default {
           nama: this.userInfo.fullname,
           nis: this.userInfo.nis,
           kelas: this.userInfo.kelas,
-          listReport: [params]
-        })
+          listReport: this.isReportExist ? paramForExist : [params]
+        }, { merge: true })
         .then(function () {
           Swal.fire('Succesfully', 'Berhasil!', 'success')
           self.$router.go(-1)

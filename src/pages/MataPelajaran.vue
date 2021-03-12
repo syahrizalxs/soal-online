@@ -20,8 +20,8 @@
             </div>
             <div class="row">
               <div class="col-12" align="right">
-                <!-- :disabled="timeNow < getJsDate(item.data.waktuMulai) || timeNow > getJsDate(item.data.waktuSelesai)" -->
-                <b-button variant="info" @click="onDetail(item)">Kerjakan Soal</b-button>
+                <!-- -->
+                <b-button :disabled="timeNow < getJsDate(item.data.waktuMulai) || timeNow > getJsDate(item.data.waktuSelesai) || isAlreadyTake(item.data.kodeMataPelajaran)" variant="info" @click="onDetail(item)">Kerjakan Soal</b-button>
               </div>
             </div>
 				  </b-card>
@@ -57,6 +57,7 @@ export default {
       isGanjil: undefined,
       interval: null,
       materiList: [],
+      soalSelesai: [],
       classList: [
         { name: 'Matematika', teacher: 'Bangbang S.kom', materi: 20, soal: 6 },
         { name: 'Bahasa Inggris', teacher: 'Desi S.kom', materi: 18, soal: 5 },
@@ -91,6 +92,13 @@ export default {
           this.userInfo = res.data()
         })
 
+        await db.collection('report')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.soalSelesai = res.data()
+        })
+
       this.isGanjil = this.userInfo.nis.substr(this.userInfo.nis.length - 1) % 2 === 1
     },
     async getMataPelajaran () {
@@ -116,6 +124,12 @@ export default {
     getJsDate (date) {
       return new Date(date)
     },
+
+    // Validasi jika user sudah mengambil ujian tersebut
+    isAlreadyTake(id) {
+      const isAlreadyTake = this.soalSelesai.listReport.filter(item => item.kodeMataPelajaran === id).length > 0 ? true : false
+      return isAlreadyTake
+    },
     async getMataPelajaranList () {
       this.$parent.isLoading = true
       const data = []
@@ -123,6 +137,7 @@ export default {
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
+            console.log({ doc: doc.data() })
             if (doc.data().waktuMulai !== '' && doc.data().listSoal.length !== 0) {
               data.push({ data: doc.data(), doc: doc.id })
             }

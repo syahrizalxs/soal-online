@@ -19,6 +19,7 @@
     "v-calendar": "^1.0.8",
     "vue": "^2.6.10",
     "vue-dayjs": "^1.0.2",
+    "vue-html-to-paper": "^1.3.1",
     "vue-router": "^3.3.4",
     "vue-the-mask": "^0.11.1",
     "vue-wysiwyg": "^1.7.2",

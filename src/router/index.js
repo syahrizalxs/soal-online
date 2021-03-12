@@ -20,6 +20,9 @@ const Soal = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/so
 const SoalAdd = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-add.vue')
 const SoalEdit = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-edit.vue')
 
+const NilaiSiswa = () => import(/* webpackChunkName: "Nilai Siswa" */'../pages/guru/nilai-siswa/NilaiSiswa.vue')
+const RaporSiswa = () => import(/* webpackChunkName: "Rapor Siswa" */'../pages/RaportSiswa.vue')
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -100,6 +103,16 @@ const router = new VueRouter({
           path: 'guru/soal/edit/:id',
           name: 'soal-add',
           component: SoalEdit
+        },
+        {
+          path: 'guru/nilai-siswa',
+          name: 'nilai-siswa',
+          component: NilaiSiswa
+        },
+        {
+          path: 'rapor-siswa/:id',
+          name: 'rapor-siswa',
+          component: RaporSiswa
         }
       ]
     },
