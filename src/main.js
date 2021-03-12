@@ -28,7 +28,7 @@ const options = {
   ]
 }
 
-Vue.use(VueHtmlToPaper, options);
+Vue.use(VueHtmlToPaper, options)
 
 Vue.use(CKEditor)
 Vue.filter('convertDay', function (value) {

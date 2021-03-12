@@ -92,7 +92,7 @@ export default {
           this.userInfo = res.data()
         })
 
-        await db.collection('report')
+      await db.collection('report')
         .doc(userInfo.username)
         .get()
         .then(res => {
@@ -126,8 +126,8 @@ export default {
     },
 
     // Validasi jika user sudah mengambil ujian tersebut
-    isAlreadyTake(id) {
-      const isAlreadyTake = this.soalSelesai.listReport.filter(item => item.kodeMataPelajaran === id).length > 0 ? true : false
+    isAlreadyTake (id) {
+      const isAlreadyTake = this.soalSelesai.listReport.filter(item => item.kodeMataPelajaran === id).length > 0
       return isAlreadyTake
     },
     async getMataPelajaranList () {

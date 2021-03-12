@@ -38,7 +38,6 @@
 
 <script>
 
-
 import firebase from '../../../config/firebase'
 
 const db = firebase.firestore()
@@ -55,16 +54,16 @@ export default {
   },
   methods: {
     async getUserInfo () {
-       const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-        await db.collection('users')
-          .doc(userInfo.username)
-          .get()
-          .then(res => {
-            this.userInfo = res.data()
-          })
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      await db.collection('users')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+        })
     },
     async getReport () {
-      let data = []
+      const data = []
       await db
         .collection('report')
         .get()
@@ -76,22 +75,22 @@ export default {
         .catch(function (error) {
           console.log('Error getting documents: ', error)
         })
-        await data.forEach(item => {
-          item.listReport.forEach(child => {
-            if (child.kodeMataPelajaran === this.userInfo.kodeMataPelajaran) {
-              this.userReport.push({
-                namaLengkap: item.nama,
-                nis: item.nis,
-                kelas: item.kelas,
-                report: {
-                  jawabanBenar: child.jawabanBenar,
-                  nilai: child.nilai,
-                  tanggalPengerjaan: child.tanggalPengerjaan
-                }
-              })
-            }
-          })
+      await data.forEach(item => {
+        item.listReport.forEach(child => {
+          if (child.kodeMataPelajaran === this.userInfo.kodeMataPelajaran) {
+            this.userReport.push({
+              namaLengkap: item.nama,
+              nis: item.nis,
+              kelas: item.kelas,
+              report: {
+                jawabanBenar: child.jawabanBenar,
+                nilai: child.nilai,
+                tanggalPengerjaan: child.tanggalPengerjaan
+              }
+            })
+          }
         })
+      })
     }
   }
 }

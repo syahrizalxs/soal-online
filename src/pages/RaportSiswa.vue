@@ -47,7 +47,6 @@
 
 <script>
 
-
 import firebase from '../config/firebase'
 import { convertNano } from '../common/helper/time'
 
@@ -68,23 +67,22 @@ export default {
   },
   methods: {
     getRataRata () {
-      let report = this.userReport.map(item => {
+      const report = this.userReport.map(item => {
         return item.report
       })
       console.log({ report })
       return report.reduce((acc, current) => {
         return acc + current.nilai
-      },0)
-
+      }, 0)
     },
     async getUserInfo () {
-       const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-        await db.collection('users')
-          .doc(userInfo.username)
-          .get()
-          .then(res => {
-            this.userInfo = res.data()
-          })
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      await db.collection('users')
+        .doc(userInfo.username)
+        .get()
+        .then(res => {
+          this.userInfo = res.data()
+        })
     },
 
     generatePdf () {
@@ -94,34 +92,34 @@ export default {
       document.title = title
     },
     async getReport () {
-      let data = []
+      const data = []
       await db
         .collection('report')
         .where('nis', '==', this.$route.params.id)
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            console.log({ doc: doc.data()})
+            console.log({ doc: doc.data() })
             data.push(doc.data())
           })
         })
         .catch(function (error) {
           console.log('Error getting documents: ', error)
         })
-        await data.forEach(item => {
-          item.listReport.forEach(child => {
-              this.userReport.push({
-                namaLengkap: item.nama,
-                nis: item.nis,
-                kelas: item.kelas,
-                report: {
-                  jawabanBenar: child.jawabanBenar,
-                  nilai: child.nilai,
-                  tanggalPengerjaan: child.tanggalPengerjaan
-                }
-              })
+      await data.forEach(item => {
+        item.listReport.forEach(child => {
+          this.userReport.push({
+            namaLengkap: item.nama,
+            nis: item.nis,
+            kelas: item.kelas,
+            report: {
+              jawabanBenar: child.jawabanBenar,
+              nilai: child.nilai,
+              tanggalPengerjaan: child.tanggalPengerjaan
+            }
           })
         })
+      })
     }
   }
 }

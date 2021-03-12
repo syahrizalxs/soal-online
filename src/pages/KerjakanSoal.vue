@@ -121,16 +121,16 @@ export default {
   methods: {
     async checkReportExist () {
       await db.collection('report')
-      .doc(this.userInfo.username)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          this.isReportExist = true
-          this.userReport = doc.data()
-        }
-      }).catch((error) => {
-        erroe
-      })
+        .doc(this.userInfo.username)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            this.isReportExist = true
+            this.userReport = doc.data()
+          }
+        }).catch((error) => {
+          erroe
+        })
     },
 
     async getUserInfo () {
@@ -174,9 +174,9 @@ export default {
         kodeMataPelajaran: this.soal.kodeMataPelajaran,
         namaMataPelajaran: this.soal.namaMataPelajaran
       })
-      
-      let paramForExist = this.userReport.listReport
-      
+
+      const paramForExist = this.userReport.listReport
+
       if (this.isReportExist) {
         paramForExist.push(params)
       }

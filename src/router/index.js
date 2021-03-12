@@ -8,20 +8,20 @@ const Profile = () => import(/* webpackChunkName: "Profile" */'../pages/Profile'
 
 const MasterMataPelajaran = () => import(/* webpackChunkName: "MasterMapel" */'../pages/master/mata-pelajaran')
 const MasterMurid = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/murid')
-const MasterGuru = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/guru')
-const MasterSoal = () => import(/* webpackChunkName: "MasterMurid" */'../pages/master/master-soal')
+const MasterGuru = () => import(/* webpackChunkName: "MasterGuru" */'../pages/master/guru')
+const MasterSoal = () => import(/* webpackChunkName: "MasterSoal" */'../pages/master/master-soal')
 
 const KelasSaya = () => import(/* webpackChunkName: "KelasSaya" */'../pages/guru/kelas/kelas-saya')
 const KelasSayaAdd = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pages/guru/kelas/kelas-saya-add')
 const KelasSayaEdit = () => import(/* webpackChunkName: "KelasSayaAdd" */'../pages/guru/kelas/kelas-saya-edit')
 
-const KerjakanSoal = () => import(/* webpackChunkName: "Materi" */'../pages/KerjakanSoal.vue')
-const Soal = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal.vue')
-const SoalAdd = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-add.vue')
-const SoalEdit = () => import(/* webpackChunkName: "Materi" */'../pages/guru/soal/soal-edit.vue')
+const KerjakanSoal = () => import(/* webpackChunkName: "Kerjakan" */'../pages/KerjakanSoal.vue')
+const Soal = () => import(/* webpackChunkName: "soal" */'../pages/guru/soal/soal.vue')
+const SoalAdd = () => import(/* webpackChunkName: "soaladd" */'../pages/guru/soal/soal-add.vue')
+const SoalEdit = () => import(/* webpackChunkName: "soaledit" */'../pages/guru/soal/soal-edit.vue')
 
-const NilaiSiswa = () => import(/* webpackChunkName: "Nilai Siswa" */'../pages/guru/nilai-siswa/NilaiSiswa.vue')
-const RaporSiswa = () => import(/* webpackChunkName: "Rapor Siswa" */'../pages/RaportSiswa.vue')
+const NilaiSiswa = () => import(/* webpackChunkName: "NilaiSiswa" */'../pages/guru/nilai-siswa/NilaiSiswa.vue')
+const RaporSiswa = () => import(/* webpackChunkName: "RaporSiswa" */'../pages/RaportSiswa.vue')
 
 Vue.use(VueRouter)
 
