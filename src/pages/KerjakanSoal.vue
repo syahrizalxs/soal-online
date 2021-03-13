@@ -13,7 +13,7 @@
     <div class="row mb-5" v-for="(item, index) in soalFiltered" :key="index">
       <div class="col-12 my-2">
         <b-card class="flex">
-          <span class="no-soal">{{index + 1}}.</span>
+          <span class="no-soal">{{ index + 1 + (( currentPage - 1 ) * 10) }}.</span>
           <div class="soal-container">
             <div>
               <span class="soal-body" v-html="item.soal"></span>
